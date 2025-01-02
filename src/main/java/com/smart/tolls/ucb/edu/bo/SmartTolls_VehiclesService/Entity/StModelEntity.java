@@ -1,10 +1,13 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,5 +26,11 @@ public class StModelEntity {
 
     private String modelDescription;
 
+    @ManyToOne
+    @JoinColumn(name = "st_models_st_model_id")
+    private StBrandEntity brand;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "vehiclesModels", fetch = FetchType.LAZY)
+    private List<StVehicleEntity> vehiclesModels;
 }

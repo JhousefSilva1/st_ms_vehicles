@@ -14,26 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "st_brands")
-public class StBrandEntity {
+@Table(name = "st_vehicles_type")
+public class StVehicleTypeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "st_brand_id")
-    private Long idBrand;
+    @Column(name = "st_vehicles_type_id")
+    private Long idVehiclesType;
 
-    private String brandName;
 
-    private String brandDescription;
 
-    private String brandManufacturingCountry;
+    private String vehiclesTypes;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
-    private List<StModelEntity> models;
-
-
-
-
-
+    @OneToMany(mappedBy = "vehiclesType", fetch = FetchType.LAZY)
+    private List <StVehicleEntity> vehiclesType;
 }

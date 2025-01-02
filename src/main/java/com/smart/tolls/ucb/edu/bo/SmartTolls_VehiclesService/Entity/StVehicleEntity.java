@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,7 +33,19 @@ public class StVehicleEntity {
 
     private Double weight;
 
+    @ManyToOne
+    @JoinColumn(name = "st_fuel_types_st_fuel_type_id")
+    private StFuelTypesEntity fuelTypes;
 
+    @ManyToOne
+    @JoinColumn(name = "st_color_st_color_id")
+    private StColorEntity vehiclesColors;
 
+    @ManyToOne
+    @JoinColumn(name = "st_models_st_model_id")
+    private StModelEntity vehiclesModels;
 
+    @ManyToOne
+    @JoinColumn(name = "st_vehicles_type_st_vehicles_type_id")
+    private StVehicleTypeEntity vehiclesType;
 }

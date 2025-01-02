@@ -1,11 +1,15 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -20,7 +24,11 @@ public class StColorEntity {
     @Column(name = "st_color_id")
     private Long idColor;
 
+    private String colorDescription;
+
     private String colorName;
 
-    private String colorDescription;
+    @JsonIgnore
+    @OneToMany(mappedBy = "vehiclesColors", fetch = FetchType.LAZY)
+    private List<StVehicleEntity> vehiclesColors;
 }
