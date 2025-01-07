@@ -22,9 +22,20 @@ public class StFuelTypesEntity {
     @Column(name = "st_fuel_type_id")
     private Long idFuelType;
 
-    private String FuelTypeFuel;
+    private String fuelTypeFuel;
 
     @JsonIgnore
     @OneToMany(mappedBy = "fuelTypes", fetch = FetchType.LAZY)
     private List<StVehicleEntity> fuelTypes;
+
+    @Column(name = "st_fuel_type_status")
+    private Integer status;
+
+    @Embedded
+    private Audit audit = new Audit();
+
+    @PrePersist
+    public void prePersist() {
+        this.status = 1;
+    }
 }

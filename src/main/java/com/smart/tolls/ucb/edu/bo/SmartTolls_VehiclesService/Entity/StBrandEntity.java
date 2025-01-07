@@ -32,7 +32,7 @@ public class StBrandEntity {
     @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
     private List<StModelEntity> models;
 
-    @Column(name = "st_color_status")
+    @Column(name = "st_brand_status")
     private Integer status;
 
     @Embedded

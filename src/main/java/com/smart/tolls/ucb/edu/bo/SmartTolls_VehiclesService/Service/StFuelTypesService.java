@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StFuelTypesService {
@@ -18,22 +19,28 @@ public class StFuelTypesService {
         return stFuelTypeRepository.findAll();
     }
 
-    public StFuelTypesEntity getFuelTypesById(Long id){
-        return stFuelTypeRepository.findById(id).get();
+    public List<StFuelTypesEntity>getAllFuelTypesByStatus(){
+        return stFuelTypeRepository.findAllByStatus();
     }
 
-    public StFuelTypesEntity createFuelType(StFuelTypesEntity stFuelTypesEntity){
-        return stFuelTypeRepository.save(stFuelTypesEntity);
+    public Optional<StFuelTypesEntity> getFuelTypesById(Long id){
+        return Optional.of(stFuelTypeRepository.findByIdAndByStatus(id, 1L));
     }
 
-    public StFuelTypesEntity updateFuelType(Long id, StFuelTypesEntity stFuelTypesEntity){
-        StFuelTypesEntity fuelTypes = stFuelTypeRepository.findById(id).orElseThrow(() -> new RuntimeException("Fuel typee was not found"));
+    public Optional<StFuelTypesEntity> createFuelType(StFuelTypesEntity stFuelTypesEntity){
+        return Optional.of(stFuelTypeRepository.save(stFuelTypesEntity));
+    }
+
+    public Optional<StFuelTypesEntity> updateFuelType(Long id, StFuelTypesEntity stFuelTypesEntity){
+        StFuelTypesEntity fuelTypes = stFuelTypeRepository.findByIdAndByStatus(id, 1L);
         fuelTypes.setFuelTypeFuel(stFuelTypesEntity.getFuelTypeFuel());
-        return stFuelTypeRepository.save(fuelTypes);
+        return Optional.of(stFuelTypeRepository.save(fuelTypes));
     }
 
-    public void deleteFuelType(Long id){
-        stFuelTypeRepository.deleteById(id);
+    public Optional<StFuelTypesEntity> deleteFuelType(Long id){
+        StFuelTypesEntity fuelTypes = stFuelTypeRepository.findByIdAndByStatus(id, 1L);
+        fuelTypes.setStatus(0);
+        return Optional.of(stFuelTypeRepository.save(fuelTypes));
     }
 
 
