@@ -32,8 +32,14 @@ public class StBrandEntity {
     @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
     private List<StModelEntity> models;
 
+    @Column(name = "st_color_status")
+    private Integer status;
 
+    @Embedded
+    private Audit audit = new Audit();
 
-
-
+    @PrePersist
+    public void prePersist() {
+        this.status = 1;
+    }
 }
