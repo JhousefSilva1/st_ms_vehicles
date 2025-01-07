@@ -1,7 +1,6 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StVehicleTypeEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StVehiclesService;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StVehiclesTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

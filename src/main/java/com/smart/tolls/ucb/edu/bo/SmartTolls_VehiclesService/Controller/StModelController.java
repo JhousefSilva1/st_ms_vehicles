@@ -1,15 +1,11 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StColorEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StModelEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StBrandService;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StModelService;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
