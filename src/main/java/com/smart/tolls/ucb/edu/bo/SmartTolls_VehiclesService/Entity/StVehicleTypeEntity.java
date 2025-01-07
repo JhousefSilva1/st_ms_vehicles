@@ -22,8 +22,6 @@ public class StVehicleTypeEntity {
     @Column(name = "st_vehicles_type_id")
     private Long idVehiclesType;
 
-
-
     private String vehiclesTypes;
 
     @JsonIgnore

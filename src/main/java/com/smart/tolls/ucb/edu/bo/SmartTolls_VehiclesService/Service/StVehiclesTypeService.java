@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StVehiclesTypeService {
@@ -16,20 +17,27 @@ public class StVehiclesTypeService {
         return stVehiclesTypeRepository.findAll();
     }
 
-    public StVehicleTypeEntity getVehicleTypeById(Long id){
-        return stVehiclesTypeRepository.findById(id).get();
+    public List<StVehicleTypeEntity> getAllTypeVehicleByStatus(){
+        return stVehiclesTypeRepository.findAllByStatus();
     }
 
-    public StVehicleTypeEntity createVehiclesType(StVehicleTypeEntity stVehicleTypeEntity){
-        return stVehiclesTypeRepository.save(stVehicleTypeEntity);
+    public Optional<StVehicleTypeEntity> getVehicleTypeById(Long id){
+        return Optional.of(stVehiclesTypeRepository.findByIdAndByStatus(id, 1L));
     }
 
-    public StVehicleTypeEntity updateVehiclesType (Long id, StVehicleTypeEntity stVehicleTypeEntity){
-        StVehicleTypeEntity vehicleType = stVehiclesTypeRepository.findById(id).orElseThrow(()-> new RuntimeException("Vehicle Type was not found"));
-        return stVehiclesTypeRepository.save(vehicleType);
-
+    public Optional<StVehicleTypeEntity> createVehiclesType(StVehicleTypeEntity stVehicleTypeEntity){
+        return Optional.of(stVehiclesTypeRepository.save(stVehicleTypeEntity));
     }
-    public void deleteVehicleType(Long id){
-        stVehiclesTypeRepository.deleteById(id);
+
+    public Optional<StVehicleTypeEntity> updateVehiclesType (Long id, StVehicleTypeEntity stVehicleTypeEntity){
+        StVehicleTypeEntity vehicleType = stVehiclesTypeRepository.findByIdAndByStatus(id, 1L);
+        vehicleType.setVehiclesTypes(stVehicleTypeEntity.getVehiclesTypes());
+        return Optional.of(stVehiclesTypeRepository.save(vehicleType));
+    }
+
+    public Optional<StVehicleTypeEntity> deleteVehicleType(Long id){
+        StVehicleTypeEntity vehicleType = stVehiclesTypeRepository.findByIdAndByStatus(id, 1L);
+        vehicleType.setStatus(0);
+        return Optional.of(stVehiclesTypeRepository.save(vehicleType));
     }
 }

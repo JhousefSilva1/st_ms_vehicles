@@ -28,7 +28,7 @@ public class StVehiclesController extends ApiController {
         return logApiResponse(response);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ApiResponse<List<StVehicleEntity>> getAllVehiclesByStatus(){
         ApiResponse<List<StVehicleEntity>> response = new ApiResponse<>();
         List<StVehicleEntity> vehicles = stVehiclesService.getAllVehiclesByStatus();
