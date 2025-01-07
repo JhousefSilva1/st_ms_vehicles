@@ -46,4 +46,15 @@ public class StVehicleEntity {
     @ManyToOne
     @JoinColumn(name = "st_vehicles_type_st_vehicles_type_id")
     private StVehicleTypeEntity vehiclesType;
+
+    @Column(name = "st_vehicle_status")
+    private Integer status;
+
+    @Embedded
+    private Audit audit = new Audit();
+
+    @PrePersist
+    public void prePersist() {
+        this.status = 1;
+    }
 }

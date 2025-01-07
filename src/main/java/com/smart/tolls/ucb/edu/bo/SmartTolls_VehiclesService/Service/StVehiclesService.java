@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StVehiclesService {
@@ -17,22 +18,34 @@ public class StVehiclesService {
         return stVehicleRepository.findAll();
     }
 
-    public StVehicleEntity getVehiclesById(Long id){
-        return stVehicleRepository.findById(id).get();
+    public List<StVehicleEntity> getAllVehiclesByStatus(){
+        return stVehicleRepository.findAllByStatus();
     }
 
-    public StVehicleEntity createVehicle(StVehicleEntity stVehicleEntity){
-        return stVehicleRepository.save(stVehicleEntity);
+    public Optional<StVehicleEntity> getVehiclesById(Long id){
+        return Optional.of(stVehicleRepository.findByIdAndByStatus(id, 1L));
     }
 
-    public StVehicleEntity updateVehicle(Long id, StVehicleEntity stVehicleEntity){
-        StVehicleEntity vehicle = stVehicleRepository.findById(id).orElseThrow(()-> new RuntimeException("Vehicle was not found"));
+    public Optional<StVehicleEntity> createVehicle(StVehicleEntity stVehicleEntity){
+        return Optional.of(stVehicleRepository.save(stVehicleEntity));
+    }
+
+    public Optional<StVehicleEntity> updateVehicle(Long id, StVehicleEntity stVehicleEntity){
+        StVehicleEntity vehicle = stVehicleRepository.findByIdAndByStatus(id, 1L);
         vehicle.setLicensePlate(stVehicleEntity.getLicensePlate());
-        return stVehicleRepository.save(vehicle);
+        vehicle.setChassisNumber(stVehicleEntity.getChassisNumber());
+        vehicle.setEngineNumber(stVehicleEntity.getEngineNumber());
+        vehicle.setManufacturingYear(stVehicleEntity.getManufacturingYear());
+        vehicle.setWeight(stVehicleEntity.getWeight());
+        vehicle.setFuelTypes(stVehicleEntity.getFuelTypes());
+        vehicle.setVehiclesColors(stVehicleEntity.getVehiclesColors());
+        vehicle.setVehiclesType(stVehicleEntity.getVehiclesType());
+        return Optional.of(stVehicleRepository.save(vehicle));
     }
 
-    public void deleteVehicle(Long id){
-        stVehicleRepository.deleteById(id);
+    public Optional<StVehicleEntity> deleteVehicle(Long id){
+        StVehicleEntity vehicle = stVehicleRepository.findByIdAndByStatus(id, 1L);
+        vehicle.setStatus(0);
+        return Optional.of(stVehicleRepository.save(vehicle));
     }
-
 }
