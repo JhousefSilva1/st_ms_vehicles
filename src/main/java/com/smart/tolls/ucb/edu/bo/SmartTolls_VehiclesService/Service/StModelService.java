@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StModelService {
@@ -17,22 +18,29 @@ public class StModelService {
         return stModelRepository.findAll();
     }
 
-    public StModelEntity getModelsById(Long id){
-        return stModelRepository.findById(id).get();
+    public List<StModelEntity> getAllModelsByStatus(){
+        return stModelRepository.findAllByStatus();
     }
 
-    public StModelEntity createModels(StModelEntity stModelEntity){
-        return stModelRepository.save(stModelEntity);
+    public Optional<StModelEntity> getModelsById(Long id){
+        return Optional.of(stModelRepository.findByIdAndByStatus(id, 1L));
     }
 
-    public StModelEntity updateModel(Long id, StModelEntity stModelEntity){
-        StModelEntity model = stModelRepository.findById(id).orElseThrow(() -> new RuntimeException( "Model was not found"));
+    public Optional<StModelEntity> createModels(StModelEntity stModelEntity){
+        return Optional.of(stModelRepository.save(stModelEntity));
+    }
+
+    public Optional<StModelEntity> updateModel(Long id, StModelEntity stModelEntity){
+        StModelEntity model = stModelRepository.findByIdAndByStatus(id, 1L);
         model.setModelName(stModelEntity.getModelName());
         model.setModelDescription(stModelEntity.getModelDescription());
-        return stModelRepository.save(model);
+        model.setBrand(stModelEntity.getBrand());
+        return Optional.of(stModelRepository.save(model));
     }
 
-    public void deleteModel(Long id){
-        stModelRepository.deleteById(id);
+    public Optional<StModelEntity> deleteModel(Long id){
+        StModelEntity model = stModelRepository.findByIdAndByStatus(id, 1L);
+        model.setStatus(0);
+        return Optional.of(stModelRepository.save(model));
     }
 }
