@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StColorService {
@@ -13,25 +14,32 @@ public class StColorService {
     @Autowired
     private StColorRepository stColorRepository;
 
-    public List<StColorEntity>getAllColors(){
+    public List<StColorEntity> getAllColors(){
         return stColorRepository.findAll();
     }
 
-    public StColorEntity getColorById(Long id){
-        return stColorRepository.findById(id).get();
+    public List<StColorEntity> getAllColorsByStatus(){
+        return stColorRepository.findAllByStatus();
     }
 
-    public StColorEntity createColor(StColorEntity stColorEntity){
-        return stColorRepository.save(stColorEntity);
+    public Optional<StColorEntity> getColorById(Long id){
+        return Optional.of(stColorRepository.findByIdAndByStatus(id, 1L));
     }
 
-    public StColorEntity updateColor(Long id, StColorEntity stColorEntity){
-        StColorEntity color = stColorRepository.findById(id).orElseThrow(() -> new RuntimeException("Color not Found"));
+    public Optional<StColorEntity> createColor(StColorEntity stColorEntity){
+        return Optional.of(stColorRepository.save(stColorEntity));
+    }
+
+    public Optional<StColorEntity> updateColor(Long id, StColorEntity stColorEntity){
+        StColorEntity color = stColorRepository.findByIdAndByStatus(id, 1L);
         color.setColorName(stColorEntity.getColorName());
-        return stColorRepository.save(color);
+        color.setColorDescription(stColorEntity.getColorDescription());
+        return Optional.of(stColorRepository.save(color));
     }
 
-    public void deleteColor(Long id){
-        stColorRepository.deleteById(id);
+    public Optional<StColorEntity> deleteColor(Long id){
+        StColorEntity color = stColorRepository.findByIdAndByStatus(id, 1L);
+        color.setStatus(0);
+        return Optional.of(stColorRepository.save(color));
     }
 }

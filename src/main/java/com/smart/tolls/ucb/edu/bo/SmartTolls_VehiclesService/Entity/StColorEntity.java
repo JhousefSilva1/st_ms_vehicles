@@ -31,4 +31,15 @@ public class StColorEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "vehiclesColors", fetch = FetchType.LAZY)
     private List<StVehicleEntity> vehiclesColors;
+
+    @Column(name = "st_color_status")
+    private Integer status;
+
+    @Embedded
+    private Audit audit = new Audit();
+
+    @PrePersist
+    public void prePersist() {
+        this.status = 1;
+    }
 }
