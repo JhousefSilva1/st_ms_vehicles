@@ -61,6 +61,29 @@ public class StModelController extends ApiController {
         return logApiResponse(response);
     }
 
+    @GetMapping("/byBrand/{id}")
+    public ApiResponse<StModelEntity> getModelsByBrandId(@PathVariable Long id){
+        ApiResponse<StModelEntity> response = new ApiResponse<>();
+        try {
+            Optional<StModelEntity> model = stModelService.getModelsByBrandId(id);
+            if(model.isPresent()){
+                response.setData(model.get());
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage(HttpStatus.OK.getReasonPhrase());
+            } else {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+            }
+        } catch (NullPointerException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        }
+        return logApiResponse(response);
+    }
+
     @PostMapping
     public ApiResponse<Optional<StModelEntity>> createModels(@RequestBody StModelEntity stModelEntity){
         ApiResponse<Optional<StModelEntity>> response = new ApiResponse<>();
