@@ -6,8 +6,8 @@ import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.StBrandR
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StBrandService;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +21,6 @@ public class StBrandController extends ApiController {
 
     @Autowired
     private StBrandService stBrandService;
-    @Autowired
-    private StBrandRepository stBrandRepository;
 
     @GetMapping("/all")
     public ApiResponse<List<StBrandEntity>> getAllBrands(){
@@ -35,14 +33,7 @@ public class StBrandController extends ApiController {
             }
 
             List<StBrandEntity> brands = stBrandService.getAllBrands();
-            if(brands == null || brands.isEmpty()){
-                response.setStatus(HttpStatus.NO_CONTENT.value());
-                response.setMessage("No brands found");
-                return logApiResponse(response);
-            }
-            response.setData(brands);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            validateBrand(response, brands);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
@@ -51,13 +42,33 @@ public class StBrandController extends ApiController {
         return logApiResponse(response);
     }
 
+    private void validateBrand(ApiResponse<List<StBrandEntity>> response, List<StBrandEntity> brands) {
+        if(brands == null || brands.isEmpty()){
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            response.setMessage("No brands found");
+        } else {
+            response.setData(brands);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+        }
+    }
+
     @GetMapping
     public ApiResponse<List<StBrandEntity>> getAllBrandsByStatus(){
         ApiResponse<List<StBrandEntity>> response = new ApiResponse<>();
-        List<StBrandEntity> brands = stBrandService.getAllBrandByStatus();
-        response.setData(brands);
-        response.setStatus(HttpStatus.OK.value());
-        response.setMessage(HttpStatus.OK.getReasonPhrase());
+        try {
+            if (!stBrandService.isServiceAvailable()) {
+                response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+                response.setMessage("The brand service is currently unavailable");
+                return logApiResponse(response);
+            }
+            List<StBrandEntity> brands = stBrandService.getAllBrandByStatus();
+            validateBrand(response, brands);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+            log.error(e.getMessage(), e);
+        }
         return logApiResponse(response);
     }
 
@@ -65,6 +76,11 @@ public class StBrandController extends ApiController {
     public ApiResponse<StBrandEntity> getBrandById(@PathVariable Long id){
         ApiResponse<StBrandEntity> response = new ApiResponse<>();
         try {
+            if(id == null || id <= 0){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Invalid id");
+                return logApiResponse(response);
+            }
             Optional<StBrandEntity> brand = stBrandService.getBrandById(id);
             if (brand.isPresent()) {
                 response.setData(brand.get());
@@ -72,14 +88,22 @@ public class StBrandController extends ApiController {
                 response.setMessage(HttpStatus.OK.getReasonPhrase());
             } else {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
-                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                response.setMessage("Braand with ID: " + id + " not found");
             }
         } catch (NullPointerException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setMessage("Brand with ID: " + id + " not found");
+        } catch (DataAccessException e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Database error: " + e.getMessage());
+            log.error("Database error while fetching brand with ID " + id, e);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Invalid argument: " + e.getMessage());
+            log.error("Invalid argument error for brand ID " + id, e);
         } catch (Exception e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setMessage("An unexpected error occurred: " + e.getMessage());
         }
         return logApiResponse(response);
     }
