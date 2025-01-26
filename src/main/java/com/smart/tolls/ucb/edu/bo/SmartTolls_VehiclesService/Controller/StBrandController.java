@@ -2,8 +2,8 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StBrandEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.StBrandRepository;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StBrandService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,21 +113,7 @@ public class StBrandController extends ApiController {
     public ApiResponse<Optional<StBrandEntity>> createBrand(@RequestBody StBrandEntity stBrandEntity){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {
-            if(stBrandEntity.getBrandName() == null || stBrandEntity.getBrandName().isBlank()){
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("BrandName is required");
-                return logApiResponse(response);
-            }
-            if(stBrandEntity.getBrandDescription() == null || stBrandEntity.getBrandDescription().isBlank()){
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("BrandDescription is required");
-                return logApiResponse(response);
-            }
-            if(stBrandEntity.getBrandManufacturingCountry() == null || stBrandEntity.getBrandManufacturingCountry().isBlank()){
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("BrandManufacturingCountry is required");
-                return logApiResponse(response);
-            }
+            if (validateFields(stBrandEntity, response)) return logApiResponse(response);
             Optional<StBrandEntity> brand = stBrandService.createBrand(stBrandEntity);
             response.setData(brand);
             response.setStatus(HttpStatus.OK.value());
@@ -147,20 +133,60 @@ public class StBrandController extends ApiController {
         }
         return logApiResponse(response);
     }
+
     @PutMapping("/{id}")
     public ApiResponse<Optional<StBrandEntity>> updateBrand(@PathVariable Long id, @RequestBody StBrandEntity stBrandEntity){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {
+            if(id == null || id <= 0){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Invalid id");
+                return logApiResponse(response);
+            }
+            if (validateFields(stBrandEntity, response)) return logApiResponse(response);
             Optional<StBrandEntity> brand = stBrandService.updateBrand(id, stBrandEntity);
             response.setData(brand);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage("Brand with ID " + id + " not found");
+            log.error("Error: Brand with ID " + id + " not found", e);
+        } catch (DataIntegrityViolationException e) {
+            response.setStatus(HttpStatus.CONFLICT.value());
+            response.setMessage("Data integrity error: " + e.getMessage());
+            log.error("Data integrity violation while updating brand with ID " + id, e);
+        } catch (ConstraintViolationException e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setMessage("Validation error: " + e.getMessage());
+            log.error("Validation error while updating brand with ID " + id, e);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An unexpected error occurred: " + e.getMessage());
+            log.error("Unexpected error while updating brand with ID " + id, e);
         }
         return logApiResponse(response);
     }
+
+    private boolean validateFields(@RequestBody StBrandEntity stBrandEntity, ApiResponse<Optional<StBrandEntity>> response) {
+        if(stBrandEntity.getBrandName() == null || stBrandEntity.getBrandName().isBlank()){
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("BrandName is required");
+            return true;
+        }
+        if(stBrandEntity.getBrandDescription() == null || stBrandEntity.getBrandDescription().isBlank()){
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("BrandDescription is required");
+            return true;
+        }
+        if(stBrandEntity.getBrandManufacturingCountry() == null || stBrandEntity.getBrandManufacturingCountry().isBlank()){
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("BrandManufacturingCountry is required");
+            return true;
+        }
+        return false;
+    }
+
     @DeleteMapping("/{id}")
     public ApiResponse<Optional<StBrandEntity>> deleteBrand(@PathVariable Long id){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
