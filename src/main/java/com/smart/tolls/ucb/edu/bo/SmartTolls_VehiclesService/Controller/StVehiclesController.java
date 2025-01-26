@@ -1,14 +1,19 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Client.CountryCityClient;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CityDto;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CountryDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.*;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request.StVehicleRequest;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.StVehicleResponse;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.*;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +35,9 @@ public class StVehiclesController extends ApiController {
     @Autowired
     public StVehiclesTypeService stVehiclesTypeService;
 
+    @Autowired
+    public CountryCityClient countryCityClient;
+
     @GetMapping("/all")
     public ApiResponse<List<StVehicleEntity>> getAllVehicles(){
         ApiResponse<List<StVehicleEntity>> response = new ApiResponse<>();
@@ -41,10 +49,41 @@ public class StVehiclesController extends ApiController {
     }
 
     @GetMapping
-    public ApiResponse<List<StVehicleEntity>> getAllVehiclesByStatus(){
-        ApiResponse<List<StVehicleEntity>> response = new ApiResponse<>();
+    public ApiResponse<List<StVehicleResponse>> getAllVehiclesByStatus(){
+        ApiResponse<List<StVehicleResponse>> response = new ApiResponse<>();
         List<StVehicleEntity> vehicles = stVehiclesService.getAllVehiclesByStatus();
-        response.setData(vehicles);
+        List<StVehicleResponse> vehiclesResponse = new ArrayList<>();
+        for (StVehicleEntity vehicle : vehicles) {
+            ApiResponse<CityDto> cityResponse = countryCityClient.getCityById(vehicle.getIdCity());
+            if(cityResponse.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro la ciudad");
+                return logApiResponse(response);
+            }
+            ApiResponse<CountryDto> countryResponse = countryCityClient.getCountryById(vehicle.getIdCountry());
+            if(countryResponse.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el pais");
+                return logApiResponse(response);
+            }
+
+            StVehicleResponse vehicleResponse = new StVehicleResponse();
+            vehicleResponse.setIdVehicle(vehicle.getIdVehicle());
+            vehicleResponse.setLicensePlate(vehicle.getLicensePlate());
+            vehicleResponse.setChassisNumber(vehicle.getChassisNumber());
+            vehicleResponse.setEngineNumber(vehicle.getEngineNumber());
+            vehicleResponse.setManufacturingYear(vehicle.getManufacturingYear());
+            vehicleResponse.setWeight(vehicle.getWeight());
+            vehicleResponse.setFuelTypes(vehicle.getFuelTypes());
+            vehicleResponse.setVehiclesColors(vehicle.getVehiclesColors());
+            vehicleResponse.setVehiclesModels(vehicle.getVehiclesModels());
+            vehicleResponse.setVehiclesType(vehicle.getVehiclesType());
+            vehicleResponse.setCountry(countryResponse.getData());
+            vehicleResponse.setCity(cityResponse.getData());
+            vehicleResponse.setIdPerson(vehicle.getIdPerson());
+            vehiclesResponse.add(vehicleResponse);
+        }
+        response.setData(vehiclesResponse);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage(HttpStatus.OK.getReasonPhrase());
         return logApiResponse(response);
@@ -101,6 +140,32 @@ public class StVehiclesController extends ApiController {
                 response.setMessage("No se encontro el tipo de vehiculo");
                 return logApiResponse(response);
             }
+
+            ApiResponse<CityDto> city = countryCityClient.getCityById(stVehicleRequest.getIdCity());
+            if(city.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro la ciudad");
+                return logApiResponse(response);
+            }
+            if(city.getData() == null) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro la ciudad");
+                return logApiResponse(response);
+            }
+
+            ApiResponse<CountryDto> country = countryCityClient.getCountryById(stVehicleRequest.getIdCountry());
+            if(country.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el pais");
+                return logApiResponse(response);
+            }
+
+            if(country.getData() == null) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el pais");
+                return logApiResponse(response);
+            }
+
             StVehicleEntity vehicleEntity = new StVehicleEntity();
             vehicleEntity.setLicensePlate(stVehicleRequest.getLicensePlate());
             vehicleEntity.setChassisNumber(stVehicleRequest.getChassisNumber());
@@ -111,6 +176,10 @@ public class StVehiclesController extends ApiController {
             vehicleEntity.setVehiclesColors(color.get());
             vehicleEntity.setVehiclesModels(model.get());
             vehicleEntity.setVehiclesType(vehicleType.get());
+            vehicleEntity.setIdCountry(stVehicleRequest.getIdCountry());
+            vehicleEntity.setIdCity(stVehicleRequest.getIdCity());
+            vehicleEntity.setIdPerson(stVehicleRequest.getIdPerson());
+
             Optional<StVehicleEntity> vehicle = stVehiclesService.createVehicle(vehicleEntity);
             response.setData(vehicle);
             response.setStatus(HttpStatus.OK.value());

@@ -35,6 +35,8 @@ public class StVehicleEntity {
 
     private Long idCity;
 
+    private Long idCountry;
+
     @ManyToOne
     @JoinColumn(name = "st_fuel_types_st_fuel_type_id")
     private StFuelTypesEntity fuelTypes;
