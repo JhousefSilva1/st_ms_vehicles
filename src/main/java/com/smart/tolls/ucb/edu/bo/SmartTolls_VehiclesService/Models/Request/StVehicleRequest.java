@@ -19,4 +19,7 @@ public class StVehicleRequest {
     private Long idVehiclesColors;
     private Long idVehiclesModels;
     private Long idVehiclesType;
+    private Long idPerson;
+    private Long idCity;
+
 }
