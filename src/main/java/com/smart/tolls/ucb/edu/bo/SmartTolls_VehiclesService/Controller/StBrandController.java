@@ -8,6 +8,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,16 +113,37 @@ public class StBrandController extends ApiController {
     public ApiResponse<Optional<StBrandEntity>> createBrand(@RequestBody StBrandEntity stBrandEntity){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {
+            if(stBrandEntity.getBrandName() == null || stBrandEntity.getBrandName().isBlank()){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("BrandName is required");
+                return logApiResponse(response);
+            }
+            if(stBrandEntity.getBrandDescription() == null || stBrandEntity.getBrandDescription().isBlank()){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("BrandDescription is required");
+                return logApiResponse(response);
+            }
+            if(stBrandEntity.getBrandManufacturingCountry() == null || stBrandEntity.getBrandManufacturingCountry().isBlank()){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("BrandManufacturingCountry is required");
+                return logApiResponse(response);
+            }
             Optional<StBrandEntity> brand = stBrandService.createBrand(stBrandEntity);
             response.setData(brand);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
         } catch (ConstraintViolationException e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setMessage("Validation error: " + e.getMessage());
+            log.error("Constraint violation during brand creation", e);
+        } catch (DataIntegrityViolationException e) {
+            response.setStatus(HttpStatus.CONFLICT.value());
+            response.setMessage("Data integrity error: " + e.getMessage());
+            log.error("Data integrity violation during brand creation", e);
         } catch (Exception e) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An unexpected error occurred: " + e.getMessage());
+            log.error("Unexpected error during brand creation", e);
         }
         return logApiResponse(response);
     }
