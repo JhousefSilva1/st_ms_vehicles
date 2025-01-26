@@ -27,7 +27,7 @@ public class StBrandController extends ApiController {
     public ApiResponse<List<StBrandEntity>> getAllBrands(){
         ApiResponse<List<StBrandEntity>> response = new ApiResponse<>();
         try {
-            if (!stBrandService.isServiceAvailable()) {
+            if (stBrandService.isServiceAvailable()) {
                 response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
                 response.setMessage("The brand service is currently unavailable");
                 return logApiResponse(response);
@@ -58,7 +58,7 @@ public class StBrandController extends ApiController {
     public ApiResponse<List<StBrandEntity>> getAllBrandsByStatus(){
         ApiResponse<List<StBrandEntity>> response = new ApiResponse<>();
         try {
-            if (!stBrandService.isServiceAvailable()) {
+            if (stBrandService.isServiceAvailable()) {
                 response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
                 response.setMessage("The brand service is currently unavailable");
                 return logApiResponse(response);
@@ -191,13 +191,24 @@ public class StBrandController extends ApiController {
     public ApiResponse<Optional<StBrandEntity>> deleteBrand(@PathVariable Long id){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {
+            if(id == null || id <= 0){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Invalid id");
+                return logApiResponse(response);
+            }
             Optional<StBrandEntity> brand = stBrandService.deleteBrand(id);
-            response.setData(brand);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            if(brand.isPresent()){
+                response.setData(brand);
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage(HttpStatus.OK.getReasonPhrase());
+            } else {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.setMessage("Braand with ID: " + id + " not found");
+            }
         } catch (Exception e) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An unexpected error occurred: " + e.getMessage());
+            log.error("Unexpected error while deleting brand with ID {}", id, e);
         }
         return logApiResponse(response);
     }
