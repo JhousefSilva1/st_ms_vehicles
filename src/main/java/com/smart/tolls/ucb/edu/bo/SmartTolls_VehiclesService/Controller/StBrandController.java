@@ -2,8 +2,11 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StBrandEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.StBrandRepository;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StBrandService;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +14,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/brands")
 public class StBrandController extends ApiController {
 
     @Autowired
     private StBrandService stBrandService;
+    @Autowired
+    private StBrandRepository stBrandRepository;
 
     @GetMapping("/all")
     public ApiResponse<List<StBrandEntity>> getAllBrands(){
         ApiResponse<List<StBrandEntity>> response = new ApiResponse<>();
-        List<StBrandEntity> brands = stBrandService.getAllBrands();
-        response.setData(brands);
-        response.setStatus(HttpStatus.OK.value());
-        response.setMessage(HttpStatus.OK.getReasonPhrase());
+        try {
+            if (!stBrandService.isServiceAvailable()) {
+                response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+                response.setMessage("The brand service is currently unavailable");
+                return logApiResponse(response);
+            }
+
+            List<StBrandEntity> brands = stBrandService.getAllBrands();
+            if(brands == null || brands.isEmpty()){
+                response.setStatus(HttpStatus.NO_CONTENT.value());
+                response.setMessage("No brands found");
+                return logApiResponse(response);
+            }
+            response.setData(brands);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+            log.error(e.getMessage(), e);
+        }
         return logApiResponse(response);
     }
 

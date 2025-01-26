@@ -2,6 +2,7 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service;
 
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StBrandEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.StBrandRepository;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +43,15 @@ public class StBrandService {
         StBrandEntity brand = stBrandRepository.findByIdAndByStatus(id, 1L);
         brand.setStatus(0);
         return Optional.of(stBrandRepository.save(brand));
+    }
+
+    public boolean isServiceAvailable() {
+        try {
+            stBrandRepository.count();
+            return true;
+        } catch (Exception e) {
+            LoggerFactory.getLogger(StBrandService.class).error("Database is not available", e);
+            return false;
+        }
     }
 }
