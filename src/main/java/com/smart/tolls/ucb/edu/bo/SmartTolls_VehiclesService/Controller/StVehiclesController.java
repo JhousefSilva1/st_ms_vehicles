@@ -1,8 +1,9 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StVehicleEntity;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.*;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request.StVehicleRequest;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StVehiclesService;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.*;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,20 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/vehicles")
 public class StVehiclesController extends ApiController {
+    @Autowired
+    public StColorService stColorService;
+
+    @Autowired
+    public StFuelTypesService stFuelTypesService;
+
+    @Autowired
+    public StModelService stModelService;
 
     @Autowired
     public StVehiclesService stVehiclesService;
+
+    @Autowired
+    public StVehiclesTypeService stVehiclesTypeService;
 
     @GetMapping("/all")
     public ApiResponse<List<StVehicleEntity>> getAllVehicles(){
@@ -62,10 +74,44 @@ public class StVehiclesController extends ApiController {
     }
 
     @PostMapping
-    public ApiResponse<Optional<StVehicleEntity>> createVehicles(@RequestBody StVehicleEntity stVehicleEntity){
+    public ApiResponse<Optional<StVehicleEntity>> createVehicles(@RequestBody StVehicleRequest stVehicleRequest){
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
         try {
-            Optional<StVehicleEntity> vehicle = stVehiclesService.createVehicle(stVehicleEntity);
+            Optional<StFuelTypesEntity> fuelTypes = stFuelTypesService.getFuelTypesById(stVehicleRequest.getIdFuelTypes());
+            if(fuelTypes.isEmpty()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el tipo de combustible");
+                return logApiResponse(response);
+            }
+            Optional<StColorEntity> color = stColorService.getColorById(stVehicleRequest.getIdVehiclesColors());
+            if(color.isEmpty()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el color");
+                return logApiResponse(response);
+            }
+            Optional<StModelEntity> model = stModelService.getModelsById(stVehicleRequest.getIdVehiclesModels());
+            if(model.isEmpty()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el modelo");
+                return logApiResponse(response);
+            }
+            Optional<StVehicleTypeEntity> vehicleType = stVehiclesTypeService.getVehicleTypeById(stVehicleRequest.getIdVehiclesType());
+            if(vehicleType.isEmpty()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro el tipo de vehiculo");
+                return logApiResponse(response);
+            }
+            StVehicleEntity vehicleEntity = new StVehicleEntity();
+            vehicleEntity.setLicensePlate(stVehicleRequest.getLicensePlate());
+            vehicleEntity.setChassisNumber(stVehicleRequest.getChassisNumber());
+            vehicleEntity.setEngineNumber(stVehicleRequest.getEngineNumber());
+            vehicleEntity.setManufacturingYear(stVehicleRequest.getManufacturingYear());
+            vehicleEntity.setWeight(stVehicleRequest.getWeight());
+            vehicleEntity.setFuelTypes(fuelTypes.get());
+            vehicleEntity.setVehiclesColors(color.get());
+            vehicleEntity.setVehiclesModels(model.get());
+            vehicleEntity.setVehiclesType(vehicleType.get());
+            Optional<StVehicleEntity> vehicle = stVehiclesService.createVehicle(vehicleEntity);
             response.setData(vehicle);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
