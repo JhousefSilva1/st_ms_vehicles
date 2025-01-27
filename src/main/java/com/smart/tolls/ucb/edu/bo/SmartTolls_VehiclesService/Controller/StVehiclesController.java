@@ -38,7 +38,15 @@ public class StVehiclesController extends ApiController {
     @Autowired
     public CountryCityClient countryCityClient;
 
-
+    @GetMapping("/all")
+    public ApiResponse<List<StVehicleEntity>> getAllVehicles(){
+        ApiResponse<List<StVehicleEntity>> response = new ApiResponse<>();
+        List<StVehicleEntity> vehicles = stVehiclesService.getAllVehicles();
+        response.setData(vehicles);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage(HttpStatus.OK.getReasonPhrase());
+        return logApiResponse(response);
+    }
     @GetMapping
     public ApiResponse<List<StVehicleResponse>> getAllVehiclesByStatus(){
         ApiResponse<List<StVehicleResponse>> response = new ApiResponse<>();
