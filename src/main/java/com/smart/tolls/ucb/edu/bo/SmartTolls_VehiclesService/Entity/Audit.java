@@ -64,6 +64,7 @@ public class Audit<T> {
             this.setAction(request.getMethod());
             this.setIpAddress(request.getRemoteAddr());
         }
+        this.previousValue = null;
     }
 
     @PreUpdate

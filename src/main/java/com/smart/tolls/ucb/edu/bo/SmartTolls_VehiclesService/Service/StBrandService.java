@@ -1,5 +1,6 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service;
 
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.Audit;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StBrandEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.StBrandRepository;
 import org.slf4j.LoggerFactory;
@@ -28,14 +29,20 @@ public class StBrandService {
     }
 
     public Optional<StBrandEntity> createBrand(StBrandEntity stBrandEntity){
+        if (stBrandEntity.getAudit() == null) {
+            stBrandEntity.setAudit(new Audit<>());
+        }
+        stBrandEntity.getAudit().setCurrentValue(stBrandEntity.toString());
         return Optional.of(stBrandRepository.save(stBrandEntity));
     }
 
     public Optional<StBrandEntity> updateBrand(Long id, StBrandEntity stBrandEntity){
         StBrandEntity brand = stBrandRepository.findByIdAndByStatus(id, 1L);
+        brand.getAudit().setPreviousValue(brand.toString()); // Aquí puedes personalizar el valor que deseas auditar
         brand.setBrandName(stBrandEntity.getBrandName());
         brand.setBrandDescription(stBrandEntity.getBrandDescription());
         brand.setBrandManufacturingCountry(stBrandEntity.getBrandManufacturingCountry());
+        brand.getAudit().setCurrentValue(brand.toString());
         return Optional.of(stBrandRepository.save(brand));
     }
 
