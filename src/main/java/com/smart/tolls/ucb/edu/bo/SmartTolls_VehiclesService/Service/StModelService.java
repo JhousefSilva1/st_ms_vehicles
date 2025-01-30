@@ -26,6 +26,11 @@ public class StModelService {
         return Optional.of(stModelRepository.findByIdAndByStatus(id, 1L));
     }
 
+//    get brandId bay modelId
+    public Optional<StModelEntity> getBrandIdByModelId(Long id){
+        return Optional.ofNullable(stModelRepository.findBrandIdByModelId(id));
+    }
+
     public List<StModelEntity> getModelsByBrandId(Long id){
         return stModelRepository.findByBrandAndByStatus(id);
     }

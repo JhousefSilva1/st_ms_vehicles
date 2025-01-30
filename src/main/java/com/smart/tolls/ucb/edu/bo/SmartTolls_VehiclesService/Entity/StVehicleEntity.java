@@ -49,6 +49,7 @@ public class StVehicleEntity {
     @JoinColumn(name = "st_models_st_model_id")
     private StModelEntity vehiclesModels;
 
+
     @ManyToOne
     @JoinColumn(name = "st_vehicles_type_st_vehicles_type_id")
     private StVehicleTypeEntity vehiclesType;

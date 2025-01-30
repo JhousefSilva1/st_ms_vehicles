@@ -15,4 +15,10 @@ public interface StModelRepository  extends JpaRepository<StModelEntity, Long> {
 
     @Query("select b from StModelEntity b where b.brand.idBrand=?1 and b.status=1")
     List<StModelEntity> findByBrandAndByStatus(Long id);
+
+
+
+//    query get brandId by modelId
+    @Query("select b from StModelEntity b where b.idModel=?1")
+    StModelEntity findBrandIdByModelId(Long id);
 }

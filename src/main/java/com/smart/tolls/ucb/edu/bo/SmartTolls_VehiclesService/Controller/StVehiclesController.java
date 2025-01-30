@@ -157,6 +157,15 @@ public class StVehiclesController extends ApiController {
                 response.setMessage("No se encontro el color");
                 return logApiResponse(response);
             }
+
+            Optional<StModelEntity> brand = stModelService.getBrandIdByModelId(stVehicleRequest.getIdVehiclesModels());
+            if(brand.isEmpty()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro la marca");
+                return logApiResponse(response);
+            }
+
+
             Optional<StModelEntity> model = stModelService.getModelsById(stVehicleRequest.getIdVehiclesModels());
             if(model.isEmpty()) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -208,7 +217,7 @@ public class StVehiclesController extends ApiController {
             vehicleEntity.setIdCountry(stVehicleRequest.getIdCountry());
             vehicleEntity.setIdCity(stVehicleRequest.getIdCity());
             vehicleEntity.setIdPerson(stVehicleRequest.getIdPerson());
-
+            vehicleEntity.setVehiclesModels(brand.get());
             Optional<StVehicleEntity> vehicle = stVehiclesService.createVehicle(vehicleEntity);
             response.setData(vehicle);
             response.setStatus(HttpStatus.OK.value());
