@@ -57,19 +57,10 @@ public class StBrandController extends ApiController {
     @GetMapping
     public ApiResponse<List<StBrandEntity>> getAllBrandsByStatus(){
         ApiResponse<List<StBrandEntity>> response = new ApiResponse<>();
-        try {
-            if (stBrandService.isServiceAvailable()) {
-                response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
-                response.setMessage("The brand service is currently unavailable");
-                return logApiResponse(response);
-            }
-            List<StBrandEntity> brands = stBrandService.getAllBrandByStatus();
-            validateBrand(response, brands);
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-            log.error(e.getMessage(), e);
-        }
+        List<StBrandEntity> brands = stBrandService.getAllBrandByStatus();
+        response.setData(brands);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage(HttpStatus.OK.getReasonPhrase());
         return logApiResponse(response);
     }
 
