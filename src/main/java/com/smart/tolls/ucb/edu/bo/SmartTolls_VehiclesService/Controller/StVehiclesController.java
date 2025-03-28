@@ -48,41 +48,10 @@ public class StVehiclesController extends ApiController {
         return logApiResponse(response);
     }
     @GetMapping
-    public ApiResponse<List<StVehicleResponse>> getAllVehiclesByStatus(){
-        ApiResponse<List<StVehicleResponse>> response = new ApiResponse<>();
-        List<StVehicleEntity> vehicles = stVehiclesService.getAllVehiclesByStatus();
-        List<StVehicleResponse> vehiclesResponse = new ArrayList<>();
-        for (StVehicleEntity vehicle : vehicles) {
-            ApiResponse<CityDto> cityResponse = countryCityClient.getCityById(vehicle.getIdCity());
-            if(cityResponse.getStatus() != HttpStatus.OK.value()) {
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("No se encontro la ciudad");
-                return logApiResponse(response);
-            }
-            ApiResponse<CountryDto> countryResponse = countryCityClient.getCountryById(vehicle.getIdCountry());
-            if(countryResponse.getStatus() != HttpStatus.OK.value()) {
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("No se encontro el pais");
-                return logApiResponse(response);
-            }
-
-            StVehicleResponse vehicleResponse = new StVehicleResponse();
-            vehicleResponse.setIdVehicle(vehicle.getIdVehicle());
-            vehicleResponse.setLicensePlate(vehicle.getLicensePlate());
-            vehicleResponse.setChassisNumber(vehicle.getChassisNumber());
-            vehicleResponse.setEngineNumber(vehicle.getEngineNumber());
-            vehicleResponse.setManufacturingYear(vehicle.getManufacturingYear());
-            vehicleResponse.setWeight(vehicle.getWeight());
-            vehicleResponse.setFuelTypes(vehicle.getFuelTypes());
-            vehicleResponse.setVehiclesColors(vehicle.getVehiclesColors());
-            vehicleResponse.setVehiclesModels(vehicle.getVehiclesModels());
-            vehicleResponse.setVehiclesType(vehicle.getVehiclesType());
-            vehicleResponse.setCountry(countryResponse.getData());
-            vehicleResponse.setCity(cityResponse.getData());
-            vehicleResponse.setIdPerson(vehicle.getIdPerson());
-            vehiclesResponse.add(vehicleResponse);
-        }
-        response.setData(vehiclesResponse);
+    public ApiResponse<List<StVehicleEntity>> getAllVehiclesByStatus(){
+        ApiResponse<List<StVehicleEntity>> response = new ApiResponse<>();
+        List<StVehicleEntity> vehicles = stVehiclesService.getAllVehicles();
+        response.setData(vehicles);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage(HttpStatus.OK.getReasonPhrase());
         return logApiResponse(response);
@@ -185,20 +154,9 @@ public class StVehiclesController extends ApiController {
                 response.setMessage("No se encontro la ciudad");
                 return logApiResponse(response);
             }
-            if(city.getData() == null) {
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("No se encontro la ciudad");
-                return logApiResponse(response);
-            }
 
             ApiResponse<CountryDto> country = countryCityClient.getCountryById(stVehicleRequest.getIdCountry());
             if(country.getStatus() != HttpStatus.OK.value()) {
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("No se encontro el pais");
-                return logApiResponse(response);
-            }
-
-            if(country.getData() == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("No se encontro el pais");
                 return logApiResponse(response);

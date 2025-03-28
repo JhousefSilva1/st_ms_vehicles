@@ -1,10 +1,6 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request;
 
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StColorEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StFuelTypesEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StModelEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StVehicleTypeEntity;
-import jakarta.persistence.*;
+
 import lombok.Data;
 
 @Data

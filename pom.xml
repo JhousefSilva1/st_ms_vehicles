@@ -78,6 +78,11 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.structurizr</groupId>
+			<artifactId>structurizr-core</artifactId>
+			<version>1.24.0</version>
+		</dependency>
 
 <!--		openFeing-->
 		<dependency>
