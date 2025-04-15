@@ -61,7 +61,7 @@ public class StColorController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<Optional<StColorEntity>> createColor(@RequestBody StColorEntity stColorEntity){
         ApiResponse<Optional<StColorEntity>> response = new ApiResponse<>();
         try {
@@ -79,7 +79,7 @@ public class StColorController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ApiResponse<Optional<StColorEntity>> updateColor(@PathVariable Long id, @RequestBody StColorEntity stColorEntity ){
         ApiResponse<Optional<StColorEntity>> response = new ApiResponse<>();
         try {
@@ -94,7 +94,7 @@ public class StColorController extends ApiController {
         return logApiResponse(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<Optional<StColorEntity>> deleteColor(@PathVariable Long id){
         ApiResponse<Optional<StColorEntity>> response = new ApiResponse<>();
         try {

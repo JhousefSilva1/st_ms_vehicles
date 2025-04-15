@@ -100,7 +100,7 @@ public class StBrandController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<Optional<StBrandEntity>> createBrand(@RequestBody StBrandEntity stBrandEntity){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {
@@ -125,7 +125,7 @@ public class StBrandController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ApiResponse<Optional<StBrandEntity>> updateBrand(@PathVariable Long id, @RequestBody StBrandEntity stBrandEntity){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {
@@ -178,7 +178,7 @@ public class StBrandController extends ApiController {
         return false;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<Optional<StBrandEntity>> deleteBrand(@PathVariable Long id){
         ApiResponse<Optional<StBrandEntity>> response = new ApiResponse<>();
         try {

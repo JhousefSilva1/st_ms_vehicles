@@ -1,0 +1,115 @@
+package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Auth.Config;
+
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Auth.JwtAuthEntryPoint;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Auth.JwtAuthenticationFilter;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Auth.Service.JwtService;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Auth.Service.UserDetailsServiceImpl;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    private final JwtAuthEntryPoint authEntryPoint;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint,
+                          JwtService jwtService,
+                          UserDetailsService userDetailsService) {
+        this.authEntryPoint = authEntryPoint;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authEntryPoint))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+//                        for color
+                                .requestMatchers(HttpMethod.GET,"/api/colors").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/colors/all").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/colors/{id}").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/colors/create").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.PUT, "/api/colors/update/{id}").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.DELETE, "/api/colors/delete/{id}").hasRole("ADMINISTRADOR")
+//                        for brands
+                                .requestMatchers(HttpMethod.GET,"/api/brands").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/brands/all").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/brands/{id}").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/brands/create").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.PUT,"/api/brands/update/{id}").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.DELETE,"/api/brands/delete/{id}").hasRole("ADMINISTRADOR")
+
+//                        for models
+                                .requestMatchers(HttpMethod.GET,"/api/models").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/models/all").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/models/{id}").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/models/create").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.PUT,"/api/models/update/{id}").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.DELETE,"/api/models/delete/{id}").hasRole("ADMINISTRADOR")
+//                        for FuelTypes
+                                .requestMatchers(HttpMethod.GET,"/api/fuelTypes").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/fuelTypes/all").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/fuelTypes/{id}").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/fuelTypes/create").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.PUT,"/api/fuelTypes/update/{id}").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.DELETE,"/api/fuelTypes/delete/{id}").hasRole("ADMINISTRADOR")
+//                        for VehiclesType
+                                .requestMatchers(HttpMethod.GET,"/api/vehiclesType").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/vehiclesType/all").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/vehiclesType/{id}").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/vehiclesType/create").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.PUT,"/api/vehiclesType/update/{id}").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.DELETE,"/api/vehiclesType/delete/{id}").hasRole("ADMINISTRADOR")
+//                        for vehicles
+                                .requestMatchers(HttpMethod.GET,"/api/vehicles").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.GET,"/api/vehicles/all").hasRole("ADMINISTRADOR")
+                                .requestMatchers(HttpMethod.GET,"/api/vehicles/{id}").authenticated()
+                                .requestMatchers(HttpMethod.POST,"/api/vehicles/create").hasRole("CLIENTE")
+                                .requestMatchers(HttpMethod.PUT,"/api/vehicles/update/{id}").hasRole("CLIENTE")
+                                .requestMatchers(HttpMethod.DELETE,"/api/vehicles/delete/{id}").hasRole( "CLIENTE")
+
+                                .anyRequest().denyAll()
+                )
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtService, (UserDetailsServiceImpl) userDetailsService);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

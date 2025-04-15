@@ -85,7 +85,7 @@ public class StModelController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<Optional<StModelEntity>> createModels(@RequestBody StModelRequest stModelRequest) {
         {
             ApiResponse<Optional<StModelEntity>> response = new ApiResponse<>();
@@ -115,7 +115,7 @@ public class StModelController extends ApiController {
             return logApiResponse(response);
         }
     }
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ApiResponse<Optional<StModelEntity>> updateModels(@PathVariable Long id, @RequestBody StModelEntity stModelEntity){
         ApiResponse<Optional<StModelEntity>> response =  new ApiResponse<>();
         try {
@@ -130,7 +130,7 @@ public class StModelController extends ApiController {
         return logApiResponse(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<Optional<StModelEntity>> deleteModels(@PathVariable Long id){
         ApiResponse<Optional<StModelEntity>> response = new ApiResponse<>();
         try {

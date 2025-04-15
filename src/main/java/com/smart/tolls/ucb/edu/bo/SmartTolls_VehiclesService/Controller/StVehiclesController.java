@@ -110,7 +110,7 @@ public class StVehiclesController extends ApiController {
     
 
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<Optional<StVehicleEntity>> createVehicles(@RequestBody StVehicleRequest stVehicleRequest){
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
         try {
@@ -190,7 +190,7 @@ public class StVehiclesController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ApiResponse<Optional<StVehicleEntity>> updateVehicle(@PathVariable Long id, @RequestBody StVehicleEntity stVehicleEntity){
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
         try {
@@ -205,7 +205,7 @@ public class StVehiclesController extends ApiController {
         return logApiResponse(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<Optional<StVehicleEntity>> deleteVehicle(@PathVariable Long id){
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
         try {

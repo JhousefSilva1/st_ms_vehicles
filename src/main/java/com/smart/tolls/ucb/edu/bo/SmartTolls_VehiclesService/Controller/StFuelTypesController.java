@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/fuel/types")
+@RequestMapping("/api/fuelTypes")
 public class StFuelTypesController extends ApiController {
 
     @Autowired
@@ -62,7 +62,7 @@ public class StFuelTypesController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<Optional<StFuelTypesEntity>> createFuelTypes(@RequestBody StFuelTypesEntity stFuelTypesEntity){
         ApiResponse<Optional<StFuelTypesEntity>> response = new ApiResponse<>();
         try {
@@ -80,7 +80,7 @@ public class StFuelTypesController extends ApiController {
         return logApiResponse(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ApiResponse<Optional<StFuelTypesEntity>> updateFuelType(@PathVariable Long id, @RequestBody StFuelTypesEntity stFuelTypesEntity){
         ApiResponse<Optional<StFuelTypesEntity>> response = new ApiResponse<>();
         try {
@@ -95,7 +95,7 @@ public class StFuelTypesController extends ApiController {
         return logApiResponse(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<Optional<StFuelTypesEntity>> deleteFuelType(@PathVariable Long id){
         ApiResponse<Optional<StFuelTypesEntity>> response = new ApiResponse<>();
         try {
