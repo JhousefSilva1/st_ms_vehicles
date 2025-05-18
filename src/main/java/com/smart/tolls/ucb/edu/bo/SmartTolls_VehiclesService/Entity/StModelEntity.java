@@ -27,7 +27,7 @@ public class StModelEntity {
     private String modelDescription;
 
     @ManyToOne
-    @JoinColumn(name = "st_models_st_model_id")
+    @JoinColumn(name = "st_brands_st_brand_id")
     private StBrandEntity brand;
 
     @JsonIgnore

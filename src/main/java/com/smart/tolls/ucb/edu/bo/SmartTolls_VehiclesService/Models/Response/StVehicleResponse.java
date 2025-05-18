@@ -2,6 +2,7 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response;
 
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CityDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CountryDto;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.PersonsDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StColorEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StFuelTypesEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StModelEntity;
@@ -20,8 +21,8 @@ public class StVehicleResponse {
     private StColorEntity vehiclesColors;
     private StModelEntity vehiclesModels;
     private StVehicleTypeEntity vehiclesType;
-    private Long idPerson;
     private CityDto city;
     private CountryDto country;
+    private PersonsDto persons;
 
 }

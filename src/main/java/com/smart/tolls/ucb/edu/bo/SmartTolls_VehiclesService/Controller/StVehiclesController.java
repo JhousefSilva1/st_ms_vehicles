@@ -1,8 +1,10 @@
 package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Client.CountryCityClient;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Client.PersonsClient;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CityDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CountryDto;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.PersonsDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.*;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request.StVehicleRequest;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
@@ -37,6 +39,9 @@ public class StVehiclesController extends ApiController {
 
     @Autowired
     public CountryCityClient countryCityClient;
+
+    @Autowired
+    public PersonsClient personsClient;
 
     @GetMapping("/all")
     public ApiResponse<List<StVehicleEntity>> getAllVehicles(){
@@ -82,6 +87,13 @@ public class StVehiclesController extends ApiController {
                 response.setMessage("No se encontro el pais");
                 return logApiResponse(response);
             }
+
+            ApiResponse<PersonsDto> personsResponse =  personsClient.getPersonsById(vehicle.getIdPerson());
+            if(personsResponse.getStatus()!= HttpStatus.OK.value()){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontro la persona");
+                return logApiResponse(response);
+            }
     
             StVehicleResponse vehicleResponse = new StVehicleResponse();
             vehicleResponse.setIdVehicle(vehicle.getIdVehicle());
@@ -96,7 +108,7 @@ public class StVehiclesController extends ApiController {
             vehicleResponse.setVehiclesType(vehicle.getVehiclesType());
             vehicleResponse.setCountry(countryResponse.getData());
             vehicleResponse.setCity(cityResponse.getData());
-            vehicleResponse.setIdPerson(vehicle.getIdPerson());
+            vehicleResponse.setPersons(personsResponse.getData());
     
             response.setData(vehicleResponse);
             response.setStatus(HttpStatus.OK.value());
