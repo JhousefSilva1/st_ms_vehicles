@@ -24,5 +24,6 @@ public class StVehicleResponse {
     private CityDto city;
     private CountryDto country;
     private PersonsDto persons;
+    private Integer Vehiclestatus;
 
 }

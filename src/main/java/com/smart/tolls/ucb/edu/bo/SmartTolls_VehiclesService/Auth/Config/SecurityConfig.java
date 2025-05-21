@@ -70,6 +70,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE,"/api/models/delete/{id}").hasRole("ADMINISTRADOR")
 //    For Models By Brands
                                 .requestMatchers(HttpMethod.GET,"/api/models/byBrand/{id}").permitAll()
+//                        For vehicles by person id
+                                .requestMatchers(HttpMethod.GET,"/api/vehicles/person/{personId}").permitAll()
 //                        for FuelTypes
                                 .requestMatchers(HttpMethod.GET,"/api/fuelTypes").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/fuelTypes/all").permitAll()

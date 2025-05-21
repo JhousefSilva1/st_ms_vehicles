@@ -55,13 +55,13 @@ public class StVehicleEntity {
     private StVehicleTypeEntity vehiclesType;
 
     @Column(name = "st_vehicle_status")
-    private Integer status;
+    private Integer vehicleStatus;
 
     @Embedded
     private Audit audit = new Audit();
 
     @PrePersist
     public void prePersist() {
-        this.status = 1;
+        this.vehicleStatus = 1;
     }
 }

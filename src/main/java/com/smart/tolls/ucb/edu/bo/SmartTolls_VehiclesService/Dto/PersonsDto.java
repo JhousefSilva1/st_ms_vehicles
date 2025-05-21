@@ -12,7 +12,7 @@ public class PersonsDto {
     private String personName;
     private String personSurname;
     private String personWhatsappNumber;
-    private String personPassword;
+//    private String personPassword;
     private String personDni;
     private String personBirthdate;
     private String personEmail;

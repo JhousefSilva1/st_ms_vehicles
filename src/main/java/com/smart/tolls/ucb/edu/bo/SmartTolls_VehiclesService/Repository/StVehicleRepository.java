@@ -7,9 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface StVehicleRepository extends JpaRepository<StVehicleEntity, Long> {
-    @Query("select b from StVehicleEntity b where b.status = 1 order by b.idVehicle asc")
+    @Query("select b from StVehicleEntity b where b.vehicleStatus = 1 order by b.idVehicle asc")
     List<StVehicleEntity> findAllByStatus();
 
-    @Query("select b from StVehicleEntity b where b.idVehicle=?1 and b.status=?2")
-    StVehicleEntity findByIdAndByStatus(Long id, long status);
+    @Query("select b from StVehicleEntity b where b.idVehicle=?1 and b.vehicleStatus=?2")
+    StVehicleEntity findByIdAndByStatus(Long id, long vehicleStatus);
+
+//    findVehiclesByPersonId
+    @Query("select b from StVehicleEntity b where b.idPerson=?1 and b.vehicleStatus=1")
+    List<StVehicleEntity> findVehiclesByPersonId(Long id);
+
+
+
 }

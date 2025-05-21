@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +110,7 @@ public class StVehiclesController extends ApiController {
             vehicleResponse.setCountry(countryResponse.getData());
             vehicleResponse.setCity(cityResponse.getData());
             vehicleResponse.setPersons(personsResponse.getData());
+            vehicleResponse.setVehiclestatus(vehicle.getVehicleStatus());
     
             response.setData(vehicleResponse);
             response.setStatus(HttpStatus.OK.value());
@@ -119,7 +121,80 @@ public class StVehiclesController extends ApiController {
         }
         return logApiResponse(response);
     }
-    
+//    get vehicles by personId
+@GetMapping("/person/{personId}")
+public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable Long personId) {
+    ApiResponse<List<StVehicleResponse>> response = new ApiResponse<>();
+    try {
+        // Obtener todos los vehículos de la persona
+        List<StVehicleEntity> vehicles = stVehiclesService.getVehiclesByPersonId(personId);
+
+        if (vehicles.isEmpty()) {
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("No se encontraron vehículos para esta persona");
+            response.setData(Collections.emptyList());
+            return logApiResponse(response);
+        }
+
+        List<StVehicleResponse> vehicleResponses = new ArrayList<>();
+
+        for (StVehicleEntity vehicle : vehicles) {
+            // Obtener información de la ciudad
+            ApiResponse<CityDto> cityResponse = countryCityClient.getCityById(vehicle.getIdCity());
+            if (cityResponse.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontró la ciudad para el vehículo con ID: " + vehicle.getIdVehicle());
+                return logApiResponse(response);
+            }
+
+            // Obtener información del país
+            ApiResponse<CountryDto> countryResponse = countryCityClient.getCountryById(vehicle.getIdCountry());
+            if (countryResponse.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontró el país para el vehículo con ID: " + vehicle.getIdVehicle());
+                return logApiResponse(response);
+            }
+
+            // Obtener información de la persona (opcional, ya que estamos filtrando por personId)
+            ApiResponse<PersonsDto> personsResponse = personsClient.getPersonsById(vehicle.getIdPerson());
+            if (personsResponse.getStatus() != HttpStatus.OK.value()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("No se encontró la persona asociada al vehículo con ID: " + vehicle.getIdVehicle());
+                return logApiResponse(response);
+            }
+
+            // Construir la respuesta del vehículo
+            StVehicleResponse vehicleResponse = new StVehicleResponse();
+            vehicleResponse.setIdVehicle(vehicle.getIdVehicle());
+            vehicleResponse.setLicensePlate(vehicle.getLicensePlate());
+            vehicleResponse.setChassisNumber(vehicle.getChassisNumber());
+            vehicleResponse.setEngineNumber(vehicle.getEngineNumber());
+            vehicleResponse.setManufacturingYear(vehicle.getManufacturingYear());
+            vehicleResponse.setWeight(vehicle.getWeight());
+            vehicleResponse.setFuelTypes(vehicle.getFuelTypes());
+            vehicleResponse.setVehiclesColors(vehicle.getVehiclesColors());
+            vehicleResponse.setVehiclesModels(vehicle.getVehiclesModels());
+            vehicleResponse.setVehiclesType(vehicle.getVehiclesType());
+            vehicleResponse.setCountry(countryResponse.getData());
+            vehicleResponse.setCity(cityResponse.getData());
+            vehicleResponse.setPersons(personsResponse.getData());
+            vehicleResponse.setVehiclestatus(vehicle.getVehicleStatus());
+
+            vehicleResponses.add(vehicleResponse);
+        }
+
+        response.setData(vehicleResponses);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage(HttpStatus.OK.getReasonPhrase());
+
+    } catch (Exception e) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.setMessage("Error al obtener los vehículos: " + e.getMessage());
+    }
+
+    return logApiResponse(response);
+}
+
 
 
     @PostMapping("/create")

@@ -22,9 +22,16 @@ public class StVehiclesService {
         return stVehicleRepository.findAllByStatus();
     }
 
+//    getVehiclesByPersonId
+    public List<StVehicleEntity> getVehiclesByPersonId(Long id){
+        return stVehicleRepository.findVehiclesByPersonId(id);
+    }
+
     public Optional<StVehicleEntity> getVehiclesById(Long id){
         return Optional.of(stVehicleRepository.findByIdAndByStatus(id, 1L));
     }
+
+
 
     public Optional<StVehicleEntity> createVehicle(StVehicleEntity stVehicleEntity){
         return Optional.of(stVehicleRepository.save(stVehicleEntity));
@@ -45,7 +52,7 @@ public class StVehiclesService {
 
     public Optional<StVehicleEntity> deleteVehicle(Long id){
         StVehicleEntity vehicle = stVehicleRepository.findByIdAndByStatus(id, 1L);
-        vehicle.setStatus(0);
+        vehicle.setVehicleStatus(0);
         return Optional.of(stVehicleRepository.save(vehicle));
     }
 }
