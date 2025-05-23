@@ -3,10 +3,7 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CityDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.CountryDto;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Dto.PersonsDto;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StColorEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StFuelTypesEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StModelEntity;
-import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StVehicleTypeEntity;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.*;
 import lombok.Data;
 
 @Data
@@ -17,6 +14,7 @@ public class StVehicleResponse {
     private String engineNumber;
     private String manufacturingYear;
     private Double weight;
+    private StWalletEntity wallet;
     private StFuelTypesEntity fuelTypes;
     private StColorEntity vehiclesColors;
     private StModelEntity vehiclesModels;

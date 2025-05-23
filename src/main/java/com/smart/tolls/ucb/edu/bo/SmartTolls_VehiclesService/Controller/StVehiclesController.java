@@ -36,6 +36,10 @@ public class StVehiclesController extends ApiController {
     public StVehiclesService stVehiclesService;
 
     @Autowired
+    public StWalletService stWalletService;
+
+
+    @Autowired
     public StVehiclesTypeService stVehiclesTypeService;
 
     @Autowired
@@ -95,6 +99,7 @@ public class StVehiclesController extends ApiController {
                 response.setMessage("No se encontro la persona");
                 return logApiResponse(response);
             }
+
     
             StVehicleResponse vehicleResponse = new StVehicleResponse();
             vehicleResponse.setIdVehicle(vehicle.getIdVehicle());
@@ -111,13 +116,66 @@ public class StVehiclesController extends ApiController {
             vehicleResponse.setCity(cityResponse.getData());
             vehicleResponse.setPersons(personsResponse.getData());
             vehicleResponse.setVehiclestatus(vehicle.getVehicleStatus());
-    
+
             response.setData(vehicleResponse);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        }
+        return logApiResponse(response);
+    }
+    @GetMapping("/{vehicleId}/wallet")
+    public ApiResponse<StWalletEntity> getWalletByVehicleId(@PathVariable Long vehicleId) {
+        ApiResponse<StWalletEntity> response = new ApiResponse<>();
+        try {
+            Optional<StWalletEntity> wallet = stWalletService.getWalletByVehicleId(vehicleId);
+
+            if (wallet.isEmpty()) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.setMessage("No se encontró wallet para el vehículo especificado");
+                return logApiResponse(response);
+            }
+
+            response.setData(wallet.get());
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error al obtener la wallet: " + e.getMessage());
+        }
+        return logApiResponse(response);
+    }
+    @PutMapping("/{vehicleId}/wallet/balance")
+    public ApiResponse<StWalletEntity> updateWalletBalance(
+            @PathVariable Long vehicleId,
+            @RequestParam Double amount) {
+        ApiResponse<StWalletEntity> response = new ApiResponse<>();
+        try {
+            Optional<StWalletEntity> wallet = stWalletService.getWalletByVehicleId(vehicleId);
+
+            if (wallet.isEmpty()) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.setMessage("No se encontró wallet para el vehículo especificado");
+                return logApiResponse(response);
+            }
+
+            Optional<StWalletEntity> updatedWallet = stWalletService.updateWalletBalance(
+                    wallet.get().getIdWallet(), amount);
+
+            if (updatedWallet.isEmpty()) {
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                response.setMessage("Error al actualizar el balance");
+                return logApiResponse(response);
+            }
+
+            response.setData(updatedWallet.get());
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Balance actualizado exitosamente");
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error al actualizar el balance: " + e.getMessage());
         }
         return logApiResponse(response);
     }
@@ -137,6 +195,7 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
         }
 
         List<StVehicleResponse> vehicleResponses = new ArrayList<>();
+
 
         for (StVehicleEntity vehicle : vehicles) {
             // Obtener información de la ciudad
@@ -162,7 +221,7 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
                 response.setMessage("No se encontró la persona asociada al vehículo con ID: " + vehicle.getIdVehicle());
                 return logApiResponse(response);
             }
-
+            Optional<StWalletEntity> wallet = stWalletService.getWalletByVehicleId(vehicle.getIdVehicle());
             // Construir la respuesta del vehículo
             StVehicleResponse vehicleResponse = new StVehicleResponse();
             vehicleResponse.setIdVehicle(vehicle.getIdVehicle());
@@ -179,6 +238,9 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
             vehicleResponse.setCity(cityResponse.getData());
             vehicleResponse.setPersons(personsResponse.getData());
             vehicleResponse.setVehiclestatus(vehicle.getVehicleStatus());
+
+            wallet.ifPresent(vehicleResponse::setWallet);
+
 
             vehicleResponses.add(vehicleResponse);
         }
@@ -263,7 +325,14 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
             vehicleEntity.setIdCity(stVehicleRequest.getIdCity());
             vehicleEntity.setIdPerson(stVehicleRequest.getIdPerson());
             vehicleEntity.setVehiclesModels(brand.get());
+
             Optional<StVehicleEntity> vehicle = stVehiclesService.createVehicle(vehicleEntity);
+
+            // Crear wallet automáticamente para el vehículo
+            if(vehicle.isPresent()) {
+                stWalletService.createWalletForVehicle(vehicle.get().getIdVehicle());
+            }
+
             response.setData(vehicle);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());

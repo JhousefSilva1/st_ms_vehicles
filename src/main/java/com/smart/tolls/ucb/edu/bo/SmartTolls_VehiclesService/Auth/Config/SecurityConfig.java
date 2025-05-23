@@ -91,9 +91,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/api/vehicles/all").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/vehicles/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/api/vehicles/create").permitAll()
-                                .requestMatchers(HttpMethod.PUT,"/api/vehicles/update/{id}").hasRole("CLIENTE")
+                                .requestMatchers(HttpMethod.PUT,"/api/vehicles/update/{id}").permitAll()
                                 .requestMatchers(HttpMethod.DELETE,"/api/vehicles/delete/{id}").hasRole( "CLIENTE")
-
+//                      wallet
+                                .requestMatchers(HttpMethod.GET,"/api/vehicles/{vehiclesId}/wallet").permitAll()
                                 .anyRequest().denyAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
