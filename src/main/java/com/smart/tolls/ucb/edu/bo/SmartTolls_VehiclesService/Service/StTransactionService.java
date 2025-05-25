@@ -6,6 +6,10 @@ import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request.Tran
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.TransactionResponse;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,5 +109,34 @@ public class StTransactionService {
 
 
         return response;
+    }
+
+    public Page<TransactionResponse> getAllTransactions(int page, int size, String sortBy) {
+        Sort sort = Sort.by(sortBy == null ? "transactionDate" : sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return transactionRepository.findAll(pageable)
+                .map(this::convertToTransactionResponse);
+    }
+
+    public List<TransactionResponse> getTransactionsByToll(Long tollId, LocalDate startDate, LocalDate endDate) {
+        // Validar que el peaje existe
+
+
+        List<StTransactionEntity> transactions;
+
+        if (startDate != null && endDate != null) {
+            transactions = transactionRepository.findByTollIdAndDateRange(
+                    tollId,
+                    startDate.atStartOfDay(),
+                    endDate.plusDays(1).atStartOfDay()
+            );
+        } else {
+            transactions = transactionRepository.findByTollId(tollId);
+        }
+
+        return transactions.stream()
+                .map(this::convertToTransactionResponse)
+                .collect(Collectors.toList());
     }
 }

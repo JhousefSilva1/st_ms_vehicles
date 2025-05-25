@@ -21,4 +21,14 @@ public interface StTransactionRepository extends JpaRepository<StTransactionEnti
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+    @Query("SELECT t FROM StTransactionEntity t WHERE t.tollId = :tollId " +
+            "AND t.transactionDate BETWEEN :startDate AND :endDate")
+    List<StTransactionEntity> findByTollIdAndDateRange(
+            @Param("tollId") Long tollId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+//    find by toll
+    @Query("SELECT t FROM StTransactionEntity t WHERE t.tollId = :tollId")
+    List<StTransactionEntity> findByTollId(@Param("tollId") Long tollId);
 }

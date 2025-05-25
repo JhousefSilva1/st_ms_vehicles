@@ -6,9 +6,12 @@ import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.Api
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.TransactionResponse;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -62,6 +65,47 @@ public ApiResponse<List<TransactionResponse>> getTransactionsByVehicle(
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setMessage("Error al obtener transacciones: " + e.getMessage());
     }
-    return response;
-}
+        return response;
+    }
+    @GetMapping
+    public ApiResponse<Page<TransactionResponse>> getAllTransactions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sortBy) {
+
+        ApiResponse<Page<TransactionResponse>> response = new ApiResponse<>();
+        try {
+            Page<TransactionResponse> transactions = transactionService.getAllTransactions(page, size, sortBy);
+
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Transacciones obtenidas");
+            response.setData(transactions);
+
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Error al obtener transacciones: " + e.getMessage());
+        }
+        return response;
+    }
+
+    @GetMapping("/toll/{tollId}")
+    public ApiResponse<List<TransactionResponse>> getTransactionsByToll(
+            @PathVariable Long tollId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        ApiResponse<List<TransactionResponse>> response = new ApiResponse<>();
+        try {
+            List<TransactionResponse> transactions = transactionService.getTransactionsByToll(tollId, startDate, endDate);
+
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage(transactions.isEmpty() ? "No se encontraron transacciones" : "Transacciones encontradas");
+            response.setData(transactions);
+
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Error al obtener transacciones: " + e.getMessage());
+        }
+        return response;
+    }
 }
