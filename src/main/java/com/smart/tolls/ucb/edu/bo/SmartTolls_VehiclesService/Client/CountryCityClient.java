@@ -15,4 +15,7 @@ public interface CountryCityClient {
 
     @GetMapping("/city/{id}")
     ApiResponse<CityDto> getCityById(@PathVariable("id") Long id);
+
+    @GetMapping("/toll/{tollId}/validate")
+    Boolean validateToll(@PathVariable Long tollId);
 }

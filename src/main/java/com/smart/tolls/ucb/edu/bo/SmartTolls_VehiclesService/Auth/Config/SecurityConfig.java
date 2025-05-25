@@ -96,7 +96,7 @@ public class SecurityConfig {
 //                      wallet
                                 .requestMatchers(HttpMethod.GET,"/api/vehicles/{vehiclesId}/wallet").permitAll()
                                 .requestMatchers(HttpMethod.PUT,"/api/wallets/{walletId}/balance").permitAll()
-                                .anyRequest().denyAll()
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
