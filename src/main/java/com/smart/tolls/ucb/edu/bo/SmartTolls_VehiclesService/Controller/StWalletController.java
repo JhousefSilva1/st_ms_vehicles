@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -53,7 +54,9 @@ public class StWalletController extends ApiController {
     @PutMapping("/{walletId}/balance")
     public ApiResponse<StWalletEntity> updateWalletBalance(
             @PathVariable Long walletId,
-            @RequestParam Double amount) {
+            @RequestBody Map<String, Double> requestBody) {
+
+        Double amount = requestBody.get("amount");
         ApiResponse<StWalletEntity> response = new ApiResponse<>();
         Optional<StWalletEntity> wallet = stWalletService.updateWalletBalance(walletId, amount);
 
