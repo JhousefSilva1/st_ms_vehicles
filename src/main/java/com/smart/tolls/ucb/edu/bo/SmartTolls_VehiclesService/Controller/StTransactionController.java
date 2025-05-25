@@ -3,10 +3,13 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Controller;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StTransactionEntity;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request.TransactionRequest;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.ApiResponse;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.TransactionResponse;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.StTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -40,4 +43,25 @@ public class StTransactionController {
             return response;
         }
     }
+
+//    get transaction by vehicleId
+@GetMapping("/vehicle/{vehicleId}")
+public ApiResponse<List<TransactionResponse>> getTransactionsByVehicle(
+        @PathVariable Long vehicleId,
+        @RequestParam(required = false) String dateFilter) {
+
+    ApiResponse<List<TransactionResponse>> response = new ApiResponse<>();
+    try {
+        List<TransactionResponse> transactions = transactionService.getTransactionsByVehicle(vehicleId, dateFilter);
+
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage(transactions.isEmpty() ? "No se encontraron transacciones" : "Transacciones encontradas");
+        response.setData(transactions);
+
+    } catch (Exception e) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setMessage("Error al obtener transacciones: " + e.getMessage());
+    }
+    return response;
+}
 }

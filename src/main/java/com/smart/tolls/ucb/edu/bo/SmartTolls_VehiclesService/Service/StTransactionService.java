@@ -3,14 +3,17 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Client.CountryCityClient;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.*;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Request.TransactionRequest;
+import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.TransactionResponse;
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StTransactionService {
@@ -65,5 +68,42 @@ public class StTransactionService {
         return Optional.of(transactionRepository.save(transaction));
     }
 
-    // ... otros métodos
+    public List<TransactionResponse> getTransactionsByVehicle(Long vehicleId, String dateFilter) {
+        // Verificar si el vehículo existe
+        if (!vehicleRepository.existsById(vehicleId)) {
+            throw new RuntimeException("Vehículo no encontrado");
+        }
+
+        List<StTransactionEntity> transactions;
+
+        if (dateFilter != null) {
+            // Filtrar por fecha (ejemplo: "2023-11-20")
+            LocalDate filterDate = LocalDate.parse(dateFilter);
+            transactions = transactionRepository.findByVehicleIdAndDate(
+                    vehicleId,
+                    filterDate.atStartOfDay(),
+                    filterDate.plusDays(1).atStartOfDay()
+            );
+        } else {
+            // Obtener todas las transacciones
+            transactions = transactionRepository.findByVehicle_IdVehicle(vehicleId);
+        }
+
+        return transactions.stream()
+                .map(this::convertToTransactionResponse)
+                .collect(Collectors.toList());
+    }
+
+    private TransactionResponse convertToTransactionResponse(StTransactionEntity entity) {
+        TransactionResponse response = new TransactionResponse();
+        response.setTransactionId(entity.getTransactionId());
+        response.setTollId(entity.getTollId());
+        response.setAmount(entity.getAmount());
+        response.setTransactionDate(entity.getTransactionDate());
+
+        // Obtener nombre del peaje (opcional - requiere Feign Client)
+
+
+        return response;
+    }
 }
