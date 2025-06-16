@@ -2,17 +2,15 @@ package com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+
 @Entity
 @Table(name = "st_models")
 public class StModelEntity {

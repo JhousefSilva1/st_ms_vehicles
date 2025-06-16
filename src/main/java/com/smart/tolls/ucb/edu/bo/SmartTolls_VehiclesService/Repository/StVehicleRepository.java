@@ -17,6 +17,9 @@ public interface StVehicleRepository extends JpaRepository<StVehicleEntity, Long
     @Query("select b from StVehicleEntity b where b.idPerson=?1 and b.vehicleStatus=1")
     List<StVehicleEntity> findVehiclesByPersonId(Long id);
 
+    boolean existsByLicensePlate(String licensePlate);
+    boolean existsByChassisNumber(String chassisNumber);
+    boolean existsByEngineNumber(String engineNumber);
 
 
 }

@@ -55,4 +55,19 @@ public class StVehiclesService {
         vehicle.setVehicleStatus(0);
         return Optional.of(stVehicleRepository.save(vehicle));
     }
+
+
+    public boolean existsByLicensePlate(String licensePlate) {
+        return stVehicleRepository.existsByLicensePlate(licensePlate);
+    }
+
+
+    public boolean existsByChassisNumber(String chassisNumber) {
+        return stVehicleRepository.existsByChassisNumber(chassisNumber);
+    }
+
+
+    public boolean existsByEngineNumber(String engineNumber) {
+        return stVehicleRepository.existsByEngineNumber(engineNumber);
+    }
 }

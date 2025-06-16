@@ -12,7 +12,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "st_vehicles")
+@Table(name = "st_vehicles", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "licensePlate", name = "uk_vehicles_license_plate"),
+        @UniqueConstraint(columnNames = "chassisNumber", name = "uk_vehicles_chassis"),
+        @UniqueConstraint(columnNames = "engineNumber", name = "uk_vehicles_engine")
+})
 public class StVehicleEntity {
 
     @Id
@@ -23,8 +27,10 @@ public class StVehicleEntity {
     @Column(unique = true, nullable = false)
     private String licensePlate;
 
+    @Column(unique = true, nullable = false)
     private String chassisNumber;
 
+    @Column(unique = true, nullable = false)
     private String engineNumber;
 
     private String manufacturingYear;

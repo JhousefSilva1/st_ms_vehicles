@@ -77,7 +77,6 @@ public class StVehiclesController extends ApiController {
                 response.setMessage("No se encontro el vehiculo");
                 return logApiResponse(response);
             }
-            
             StVehicleEntity vehicle = optionalVehicle.get();
             ApiResponse<CityDto> cityResponse = countryCityClient.getCityById(vehicle.getIdCity());
             if (cityResponse.getStatus() != HttpStatus.OK.value()) {
@@ -260,9 +259,25 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
 
 
     @PostMapping("/create")
-    public ApiResponse<Optional<StVehicleEntity>> createVehicles(@RequestBody StVehicleRequest stVehicleRequest){
+    public ApiResponse<Optional<StVehicleEntity>> createVehicles(@RequestBody StVehicleRequest stVehicleRequest) {
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
         try {
+            // Validar campos únicos primero
+            if (stVehiclesService.existsByLicensePlate(stVehicleRequest.getLicensePlate())) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("La matrícula ya está registrada");
+                return logApiResponse(response);
+            }
+            if (stVehiclesService.existsByChassisNumber(stVehicleRequest.getChassisNumber())) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("El número de chasis ya está registrado");
+                return logApiResponse(response);
+            }
+            if (stVehiclesService.existsByEngineNumber(stVehicleRequest.getEngineNumber())) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("El número de motor ya está registrado");
+                return logApiResponse(response);
+            }
             Optional<StFuelTypesEntity> fuelTypes = stFuelTypesService.getFuelTypesById(stVehicleRequest.getIdFuelTypes());
             if(fuelTypes.isEmpty()) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -328,39 +343,44 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
 
             Optional<StVehicleEntity> vehicle = stVehiclesService.createVehicle(vehicleEntity);
 
-            // Crear wallet automáticamente para el vehículo
-            if(vehicle.isPresent()) {
+            if (vehicle.isPresent()) {
                 stWalletService.createWalletForVehicle(vehicle.get().getIdVehicle());
+                response.setData(vehicle);
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Vehículo registrado exitosamente");
+            } else {
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                response.setMessage("Error al crear el vehículo");
             }
-
-            response.setData(vehicle);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } catch (ConstraintViolationException e) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        } catch (RuntimeException e) {
+            // Captura errores de validación de campos únicos
+            response.setStatus(HttpStatus.CONFLICT.value());
+            response.setMessage(e.getMessage());
         } catch (Exception e) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
         }
         return logApiResponse(response);
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<Optional<StVehicleEntity>> updateVehicle(@PathVariable Long id, @RequestBody StVehicleEntity stVehicleEntity){
+    public ApiResponse<Optional<StVehicleEntity>> updateVehicle(@PathVariable Long id, @RequestBody StVehicleEntity stVehicleEntity) {
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
         try {
             Optional<StVehicleEntity> vehicle = stVehiclesService.updateVehicle(id, stVehicleEntity);
             response.setData(vehicle);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setMessage("Vehículo actualizado exitosamente");
+        } catch (RuntimeException e) {
+            // Captura errores de validación de campos únicos
+            response.setStatus(HttpStatus.CONFLICT.value());
+            response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setMessage("Error al actualizar el vehículo: " + e.getMessage());
         }
         return logApiResponse(response);
     }
-
     @DeleteMapping("/delete/{id}")
     public ApiResponse<Optional<StVehicleEntity>> deleteVehicle(@PathVariable Long id){
         ApiResponse<Optional<StVehicleEntity>> response = new ApiResponse<>();
