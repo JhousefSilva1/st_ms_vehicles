@@ -12,6 +12,7 @@ import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Models.Response.StV
 import com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Service.*;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -352,13 +353,25 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
                 response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
                 response.setMessage("Error al crear el vehículo");
             }
-        } catch (RuntimeException e) {
-            // Captura errores de validación de campos únicos
-            response.setStatus(HttpStatus.CONFLICT.value());
-            response.setMessage(e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            String rootCause = e.getRootCause() != null ? e.getRootCause().getMessage() : "";
+
+            if (rootCause.contains("uk_vehicles_license_plate")) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("La matrícula ya está registrada");
+            } else if (rootCause.contains("uk_vehicles_chassis")) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("El número de chasis ya está registrado");
+            } else if (rootCause.contains("uk_vehicles_engine")) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("El número de motor ya está registrado");
+            } else {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                response.setMessage("Datos duplicados");
+            }
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage("Error interno: " + e.getMessage());
         }
         return logApiResponse(response);
     }
@@ -396,6 +409,50 @@ public ApiResponse<List<StVehicleResponse>> getVehiclesByPersonId(@PathVariable 
         return logApiResponse(response);
     }
 
+    @GetMapping("/exists/plate/{plate}")
+    public ApiResponse<Boolean> existsByLicensePlate(@PathVariable String plate) {
+        ApiResponse<Boolean> response = new ApiResponse<>();
+        try {
+            boolean exists = stVehiclesService.existsByLicensePlate(plate);
+            response.setData(exists);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Verificación exitosa");
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+        }
+        return logApiResponse(response);
+    }
+
+    @GetMapping("/exists/chassis/{chassis}")
+    public ApiResponse<Boolean> existsByChassis(@PathVariable String chassis) {
+        ApiResponse<Boolean> response = new ApiResponse<>();
+        try {
+            boolean exists = stVehiclesService.existsByChassisNumber(chassis);
+            response.setData(exists);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Verificación exitosa");
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+        }
+        return logApiResponse(response);
+    }
+
+    @GetMapping("/exists/engine/{engine}")
+    public ApiResponse<Boolean> existsByEngine(@PathVariable String engine) {
+        ApiResponse<Boolean> response = new ApiResponse<>();
+        try {
+            boolean exists = stVehiclesService.existsByEngineNumber(engine);
+            response.setData(exists);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Verificación exitosa");
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+        }
+        return logApiResponse(response);
+    }
 
 
 }
