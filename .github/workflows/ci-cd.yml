@@ -1,0 +1,20 @@
+name: CI/CD Pipeline for msVehicles
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 22  # Versión especificada en tu pom.xml
+        uses: actions/setup-java@v3
+        with:
+          java-version: '22'
+          distribution: 'temurin'
+
+      - name: Build and test with Maven
+        run: |
+          mvn clean package
+          mvn test
