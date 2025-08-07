@@ -15,10 +15,11 @@ jobs:
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: 12345
         options: >-
-          if pg_isready -h localhost -p 5432 -U admin -d MsVehicles; then
+          --health-cmd="pg_isready -U admin -d MsVehicles"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+        
 
     steps:
       - name: Checkout code
