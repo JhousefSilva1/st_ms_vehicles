@@ -26,7 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 @ExtendWith(MockitoExtension.class)
 class StVehicleTypeControllerDiffblueTest {
 
@@ -41,128 +40,59 @@ class StVehicleTypeControllerDiffblueTest {
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testGetAllTypeVehicle_givenStVehicleTypeController() {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   jakarta.servlet.ServletException: Request processing failed: java.nio.charset.IllegalCharsetNameException:
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   java.nio.charset.IllegalCharsetNameException:
-        //       at java.base/java.nio.charset.Charset.checkName(Charset.java:316)
-        //       at java.base/java.nio.charset.Charset.lookup2(Charset.java:512)
-        //       at java.base/java.nio.charset.Charset.lookup(Charset.java:492)
-        //       at java.base/java.nio.charset.Charset.forName(Charset.java:556)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange and Act
-        (new StVehicleTypeController()).getAllTypeVehicle();
+        // Antes:
+        // (new StVehicleTypeController()).getAllTypeVehicle();
+        // Después:
+        stVehicleTypeController.getAllTypeVehicle();
     }
 
-    /**
-     * Test {@link StVehicleTypeController#getAllTypeVehicleByStatus()}.
-     * <ul>
-     *   <li>Given {@link StVehicleTypeController} (default constructor).</li>
-     * </ul>
-     * <p>
-     * Method under test: {@link StVehicleTypeController#getAllTypeVehicleByStatus()}
-     */
     @Test
     @DisplayName("Test getAllTypeVehicleByStatus(); given StVehicleTypeController (default constructor)")
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testGetAllTypeVehicleByStatus_givenStVehicleTypeController() {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   jakarta.servlet.ServletException: Request processing failed: java.nio.charset.IllegalCharsetNameException:
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   java.nio.charset.IllegalCharsetNameException:
-        //       at java.base/java.nio.charset.Charset.checkName(Charset.java:316)
-        //       at java.base/java.nio.charset.Charset.lookup2(Charset.java:512)
-        //       at java.base/java.nio.charset.Charset.lookup(Charset.java:492)
-        //       at java.base/java.nio.charset.Charset.forName(Charset.java:556)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange and Act
-        (new StVehicleTypeController()).getAllTypeVehicleByStatus();
+        // Antes:
+        // (new StVehicleTypeController()).getAllTypeVehicleByStatus();
+        // Después:
+        stVehicleTypeController.getAllTypeVehicleByStatus();
     }
 
-    /**
-     * Test {@link StVehicleTypeController#getVehicleTypeById(Long)}.
-     * <p>
-     * Method under test: {@link StVehicleTypeController#getVehicleTypeById(Long)}
-     */
     @Test
     @DisplayName("Test getVehicleTypeById(Long)")
     @Tag("MaintainedByDiffblue")
     void testGetVehicleTypeById() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
-
-        // Arrange
-        StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
-        stVehicleTypeController.stVehiclesTypeService = new StVehiclesTypeService();
-
-        // Act
+        // Antes:
+        // StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
+        // stVehicleTypeController.stVehiclesTypeService = new StVehiclesTypeService();
+        // ApiResponse<StVehicleTypeEntity> actualVehicleTypeById = stVehicleTypeController.getVehicleTypeById(1L);
+        // Después:
         ApiResponse<StVehicleTypeEntity> actualVehicleTypeById = stVehicleTypeController.getVehicleTypeById(1L);
 
-        // Assert
         assertEquals("", actualVehicleTypeById.getError());
         assertEquals("Not Found", actualVehicleTypeById.getMessage());
         assertNull(actualVehicleTypeById.getData());
         assertEquals(404, actualVehicleTypeById.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StVehicleTypeController#getVehicleTypeById(Long)}.
-     * <ul>
-     *   <li>Given {@link StVehicleTypeController} (default constructor).</li>
-     * </ul>
-     * <p>
-     * Method under test: {@link StVehicleTypeController#getVehicleTypeById(Long)}
-     */
     @Test
     @DisplayName("Test getVehicleTypeById(Long); given StVehicleTypeController (default constructor)")
     @Tag("MaintainedByDiffblue")
     void testGetVehicleTypeById_givenStVehicleTypeController() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
+        // Antes:
+        // ApiResponse<StVehicleTypeEntity> actualVehicleTypeById = (new StVehicleTypeController()).getVehicleTypeById(1L);
+        // Después:
+        ApiResponse<StVehicleTypeEntity> actualVehicleTypeById = stVehicleTypeController.getVehicleTypeById(1L);
 
-        // Arrange and Act
-        ApiResponse<StVehicleTypeEntity> actualVehicleTypeById = (new StVehicleTypeController()).getVehicleTypeById(1L);
-
-        // Assert
         assertEquals("", actualVehicleTypeById.getError());
         assertEquals("Not Found", actualVehicleTypeById.getMessage());
         assertNull(actualVehicleTypeById.getData());
         assertEquals(404, actualVehicleTypeById.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StVehicleTypeController#createVehiclesType(StVehicleTypeEntity)}.
-     * <p>
-     * Method under test: {@link StVehicleTypeController#createVehiclesType(StVehicleTypeEntity)}
-     */
     @Test
     @DisplayName("Test createVehiclesType(StVehicleTypeEntity)")
     @Tag("MaintainedByDiffblue")
     void testCreateVehiclesType() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
-
-        // Arrange
-        StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
-
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -182,48 +112,24 @@ class StVehicleTypeControllerDiffblueTest {
         stVehicleTypeEntity.setStatus(1);
         stVehicleTypeEntity.setVehiclesTypes("Vehicles Types");
 
-        // Act
-        ApiResponse<Optional<StVehicleTypeEntity>> actualCreateVehiclesTypeResult = stVehicleTypeController
-                .createVehiclesType(stVehicleTypeEntity);
+        // Antes:
+        // StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
+        // ApiResponse<Optional<StVehicleTypeEntity>> actualCreateVehiclesTypeResult = stVehicleTypeController.createVehiclesType(stVehicleTypeEntity);
+        // Después:
+        ApiResponse<Optional<StVehicleTypeEntity>> actualCreateVehiclesTypeResult = stVehicleTypeController.createVehiclesType(stVehicleTypeEntity);
 
-        // Assert
         assertEquals("", actualCreateVehiclesTypeResult.getError());
         assertEquals("Bad Request", actualCreateVehiclesTypeResult.getMessage());
         assertNull(actualCreateVehiclesTypeResult.getData());
         assertEquals(400, actualCreateVehiclesTypeResult.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StVehicleTypeController#createVehiclesType(StVehicleTypeEntity)}.
-     * <p>
-     * Method under test: {@link StVehicleTypeController#createVehiclesType(StVehicleTypeEntity)}
-     */
     @Test
     @DisplayName("Test createVehiclesType(StVehicleTypeEntity)")
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testCreateVehiclesType2() throws Exception {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.LocalDateTime` not supported by default: add Module "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" to enable handling (through reference chain: com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StVehicleTypeEntity["audit"]->com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.Audit["createDate"])
-        //       at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:77)
-        //       at com.fasterxml.jackson.databind.SerializerProvider.reportBadDefinition(SerializerProvider.java:1330)
-        //       at com.fasterxml.jackson.databind.ser.impl.UnsupportedTypeSerializer.serialize(UnsupportedTypeSerializer.java:35)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:502)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:341)
-        //       at com.fasterxml.jackson.databind.ObjectMapper._writeValueAndClose(ObjectMapper.java:4799)
-        //       at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:4040)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange
+        // Sin cambios, ya usa stVehicleTypeController
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -247,26 +153,13 @@ class StVehicleTypeControllerDiffblueTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
 
-        // Act
         MockMvcBuilders.standaloneSetup(stVehicleTypeController).build().perform(requestBuilder);
     }
 
-    /**
-     * Test {@link StVehicleTypeController#updateVehiclesType(Long, StVehicleTypeEntity)}.
-     * <p>
-     * Method under test: {@link StVehicleTypeController#updateVehiclesType(Long, StVehicleTypeEntity)}
-     */
     @Test
     @DisplayName("Test updateVehiclesType(Long, StVehicleTypeEntity)")
     @Tag("MaintainedByDiffblue")
     void testUpdateVehiclesType() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
-
-        // Arrange
-        StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
-
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -286,48 +179,24 @@ class StVehicleTypeControllerDiffblueTest {
         stVehicleTypeEntity.setStatus(1);
         stVehicleTypeEntity.setVehiclesTypes("Vehicles Types");
 
-        // Act
-        ApiResponse<Optional<StVehicleTypeEntity>> actualUpdateVehiclesTypeResult = stVehicleTypeController
-                .updateVehiclesType(1L, stVehicleTypeEntity);
+        // Antes:
+        // StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
+        // ApiResponse<Optional<StVehicleTypeEntity>> actualUpdateVehiclesTypeResult = stVehicleTypeController.updateVehiclesType(1L, stVehicleTypeEntity);
+        // Después:
+        ApiResponse<Optional<StVehicleTypeEntity>> actualUpdateVehiclesTypeResult = stVehicleTypeController.updateVehiclesType(1L, stVehicleTypeEntity);
 
-        // Assert
         assertEquals("", actualUpdateVehiclesTypeResult.getError());
         assertEquals("Bad Request", actualUpdateVehiclesTypeResult.getMessage());
         assertNull(actualUpdateVehiclesTypeResult.getData());
         assertEquals(400, actualUpdateVehiclesTypeResult.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StVehicleTypeController#updateVehiclesType(Long, StVehicleTypeEntity)}.
-     * <p>
-     * Method under test: {@link StVehicleTypeController#updateVehiclesType(Long, StVehicleTypeEntity)}
-     */
     @Test
     @DisplayName("Test updateVehiclesType(Long, StVehicleTypeEntity)")
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testUpdateVehiclesType2() throws Exception {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.LocalDateTime` not supported by default: add Module "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" to enable handling (through reference chain: com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StVehicleTypeEntity["audit"]->com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.Audit["createDate"])
-        //       at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:77)
-        //       at com.fasterxml.jackson.databind.SerializerProvider.reportBadDefinition(SerializerProvider.java:1330)
-        //       at com.fasterxml.jackson.databind.ser.impl.UnsupportedTypeSerializer.serialize(UnsupportedTypeSerializer.java:35)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:502)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:341)
-        //       at com.fasterxml.jackson.databind.ObjectMapper._writeValueAndClose(ObjectMapper.java:4799)
-        //       at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:4040)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange
+        // Sin cambios, ya usa stVehicleTypeController
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -351,59 +220,35 @@ class StVehicleTypeControllerDiffblueTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
 
-        // Act
         MockMvcBuilders.standaloneSetup(stVehicleTypeController).build().perform(requestBuilder);
     }
 
-    /**
-     * Test {@link StVehicleTypeController#deleteVehicleType(Long)}.
-     * <p>
-     * Method under test: {@link StVehicleTypeController#deleteVehicleType(Long)}
-     */
     @Test
     @DisplayName("Test deleteVehicleType(Long)")
     @Tag("MaintainedByDiffblue")
     void testDeleteVehicleType() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
+        // Antes:
+        // StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
+        // stVehicleTypeController.stVehiclesTypeService = new StVehiclesTypeService();
+        // ApiResponse<Optional<StVehicleTypeEntity>> actualDeleteVehicleTypeResult = stVehicleTypeController.deleteVehicleType(1L);
+        // Después:
+        ApiResponse<Optional<StVehicleTypeEntity>> actualDeleteVehicleTypeResult = stVehicleTypeController.deleteVehicleType(1L);
 
-        // Arrange
-        StVehicleTypeController stVehicleTypeController = new StVehicleTypeController();
-        stVehicleTypeController.stVehiclesTypeService = new StVehiclesTypeService();
-
-        // Act
-        ApiResponse<Optional<StVehicleTypeEntity>> actualDeleteVehicleTypeResult = stVehicleTypeController
-                .deleteVehicleType(1L);
-
-        // Assert
         assertEquals("", actualDeleteVehicleTypeResult.getError());
         assertEquals("Bad Request", actualDeleteVehicleTypeResult.getMessage());
         assertNull(actualDeleteVehicleTypeResult.getData());
         assertEquals(400, actualDeleteVehicleTypeResult.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StVehicleTypeController#deleteVehicleType(Long)}.
-     * <ul>
-     *   <li>Given {@link StVehicleTypeController} (default constructor).</li>
-     * </ul>
-     * <p>
-     * Method under test: {@link StVehicleTypeController#deleteVehicleType(Long)}
-     */
     @Test
     @DisplayName("Test deleteVehicleType(Long); given StVehicleTypeController (default constructor)")
     @Tag("MaintainedByDiffblue")
     void testDeleteVehicleType_givenStVehicleTypeController() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
+        // Antes:
+        // ApiResponse<Optional<StVehicleTypeEntity>> actualDeleteVehicleTypeResult = (new StVehicleTypeController()).deleteVehicleType(1L);
+        // Después:
+        ApiResponse<Optional<StVehicleTypeEntity>> actualDeleteVehicleTypeResult = stVehicleTypeController.deleteVehicleType(1L);
 
-        // Arrange and Act
-        ApiResponse<Optional<StVehicleTypeEntity>> actualDeleteVehicleTypeResult = (new StVehicleTypeController())
-                .deleteVehicleType(1L);
-
-        // Assert
         assertEquals("", actualDeleteVehicleTypeResult.getError());
         assertEquals("Bad Request", actualDeleteVehicleTypeResult.getMessage());
         assertNull(actualDeleteVehicleTypeResult.getData());

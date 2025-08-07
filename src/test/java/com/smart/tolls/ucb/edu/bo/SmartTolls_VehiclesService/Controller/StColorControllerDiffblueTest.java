@@ -40,95 +40,47 @@ class StColorControllerDiffblueTest {
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testGetAllColors() {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   jakarta.servlet.ServletException: Request processing failed: java.nio.charset.IllegalCharsetNameException:
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   java.nio.charset.IllegalCharsetNameException:
-        //       at java.base/java.nio.charset.Charset.checkName(Charset.java:316)
-        //       at java.base/java.nio.charset.Charset.lookup2(Charset.java:512)
-        //       at java.base/java.nio.charset.Charset.lookup(Charset.java:492)
-        //       at java.base/java.nio.charset.Charset.forName(Charset.java:556)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange and Act
-        (new StColorController()).getAllColors();
+        // Antes:
+        // (new StColorController()).getAllColors();
+        // Después:
+        stColorController.getAllColors();
     }
 
-    /**
-     * Test {@link StColorController#getAllColorsByStatus()}.
-     * <p>
-     * Method under test: {@link StColorController#getAllColorsByStatus()}
-     */
     @Test
     @DisplayName("Test getAllColorsByStatus()")
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testGetAllColorsByStatus() {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   jakarta.servlet.ServletException: Request processing failed: java.nio.charset.IllegalCharsetNameException:
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   java.nio.charset.IllegalCharsetNameException:
-        //       at java.base/java.nio.charset.Charset.checkName(Charset.java:316)
-        //       at java.base/java.nio.charset.Charset.lookup2(Charset.java:512)
-        //       at java.base/java.nio.charset.Charset.lookup(Charset.java:492)
-        //       at java.base/java.nio.charset.Charset.forName(Charset.java:556)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
-        //       at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange and Act
-        (new StColorController()).getAllColorsByStatus();
+        // Antes:
+        // (new StColorController()).getAllColorsByStatus();
+        // Después:
+        stColorController.getAllColorsByStatus();
     }
 
-    /**
-     * Test {@link StColorController#getColorById(Long)}.
-     * <p>
-     * Method under test: {@link StColorController#getColorById(Long)}
-     */
     @Test
     @DisplayName("Test getColorById(Long)")
     @Tag("MaintainedByDiffblue")
     void testGetColorById() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
+        // Antes:
+        // ApiResponse<StColorEntity> actualColorById = (new StColorController()).getColorById(1L);
+        // Después:
+        ApiResponse<StColorEntity> actualColorById = stColorController.getColorById(1L);
 
-        // Arrange and Act
-        ApiResponse<StColorEntity> actualColorById = (new StColorController()).getColorById(1L);
-
-        // Assert
         assertEquals("", actualColorById.getError());
         assertEquals("Not Found", actualColorById.getMessage());
         assertNull(actualColorById.getData());
         assertEquals(404, actualColorById.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StColorController#createColor(StColorEntity)}.
-     * <p>
-     * Method under test: {@link StColorController#createColor(StColorEntity)}
-     */
     @Test
     @DisplayName("Test createColor(StColorEntity)")
     @Tag("MaintainedByDiffblue")
     void testCreateColor() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
-
-        // Arrange
-        StColorController stColorController = new StColorController();
-
+        // Antes:
+        // StColorController stColorController = new StColorController();
+        // ...
+        // ApiResponse<Optional<StColorEntity>> actualCreateColorResult = stColorController.createColor(stColorEntity);
+        // Después:
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -149,47 +101,20 @@ class StColorControllerDiffblueTest {
         stColorEntity.setIdColor(1L);
         stColorEntity.setStatus(1);
 
-        // Act
         ApiResponse<Optional<StColorEntity>> actualCreateColorResult = stColorController.createColor(stColorEntity);
 
-        // Assert
         assertEquals("", actualCreateColorResult.getError());
         assertEquals("Bad Request", actualCreateColorResult.getMessage());
         assertNull(actualCreateColorResult.getData());
         assertEquals(400, actualCreateColorResult.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StColorController#createColor(StColorEntity)}.
-     * <p>
-     * Method under test: {@link StColorController#createColor(StColorEntity)}
-     */
     @Test
     @DisplayName("Test createColor(StColorEntity)")
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testCreateColor2() throws Exception {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.LocalDateTime` not supported by default: add Module "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" to enable handling (through reference chain: com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StColorEntity["audit"]->com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.Audit["createDate"])
-        //       at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:77)
-        //       at com.fasterxml.jackson.databind.SerializerProvider.reportBadDefinition(SerializerProvider.java:1330)
-        //       at com.fasterxml.jackson.databind.ser.impl.UnsupportedTypeSerializer.serialize(UnsupportedTypeSerializer.java:35)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:502)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:341)
-        //       at com.fasterxml.jackson.databind.ObjectMapper._writeValueAndClose(ObjectMapper.java:4799)
-        //       at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:4040)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange
+        // Sin cambios, ya usa stColorController
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -214,26 +139,18 @@ class StColorControllerDiffblueTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
 
-        // Act
         MockMvcBuilders.standaloneSetup(stColorController).build().perform(requestBuilder);
     }
 
-    /**
-     * Test {@link StColorController#updateColor(Long, StColorEntity)}.
-     * <p>
-     * Method under test: {@link StColorController#updateColor(Long, StColorEntity)}
-     */
     @Test
     @DisplayName("Test updateColor(Long, StColorEntity)")
     @Tag("MaintainedByDiffblue")
     void testUpdateColor() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
-
-        // Arrange
-        StColorController stColorController = new StColorController();
-
+        // Antes:
+        // StColorController stColorController = new StColorController();
+        // ...
+        // ApiResponse<Optional<StColorEntity>> actualUpdateColorResult = stColorController.updateColor(1L, stColorEntity);
+        // Después:
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -254,47 +171,20 @@ class StColorControllerDiffblueTest {
         stColorEntity.setIdColor(1L);
         stColorEntity.setStatus(1);
 
-        // Act
         ApiResponse<Optional<StColorEntity>> actualUpdateColorResult = stColorController.updateColor(1L, stColorEntity);
 
-        // Assert
         assertEquals("", actualUpdateColorResult.getError());
         assertEquals("Bad Request", actualUpdateColorResult.getMessage());
         assertNull(actualUpdateColorResult.getData());
         assertEquals(400, actualUpdateColorResult.getStatus().intValue());
     }
 
-    /**
-     * Test {@link StColorController#updateColor(Long, StColorEntity)}.
-     * <p>
-     * Method under test: {@link StColorController#updateColor(Long, StColorEntity)}
-     */
     @Test
     @DisplayName("Test updateColor(Long, StColorEntity)")
     @Disabled("TODO: Complete this test")
     @Tag("MaintainedByDiffblue")
     void testUpdateColor2() throws Exception {
-        // TODO: Diffblue Cover was only able to create a partial test for this method:
-        //   Reason: No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.LocalDateTime` not supported by default: add Module "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" to enable handling (through reference chain: com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.StColorEntity["audit"]->com.smart.tolls.ucb.edu.bo.SmartTolls_VehiclesService.Entity.Audit["createDate"])
-        //       at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:77)
-        //       at com.fasterxml.jackson.databind.SerializerProvider.reportBadDefinition(SerializerProvider.java:1330)
-        //       at com.fasterxml.jackson.databind.ser.impl.UnsupportedTypeSerializer.serialize(UnsupportedTypeSerializer.java:35)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
-        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
-        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:502)
-        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:341)
-        //       at com.fasterxml.jackson.databind.ObjectMapper._writeValueAndClose(ObjectMapper.java:4799)
-        //       at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:4040)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        // Arrange
+        // Sin cambios, ya usa stColorController
         Audit audit = new Audit();
         audit.setAction("Action");
         audit.setCreateBy("Create By");
@@ -319,27 +209,18 @@ class StColorControllerDiffblueTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
 
-        // Act
         MockMvcBuilders.standaloneSetup(stColorController).build().perform(requestBuilder);
     }
 
-    /**
-     * Test {@link StColorController#deleteColor(Long)}.
-     * <p>
-     * Method under test: {@link StColorController#deleteColor(Long)}
-     */
     @Test
     @DisplayName("Test deleteColor(Long)")
     @Tag("MaintainedByDiffblue")
     void testDeleteColor() {
-        //   Diffblue Cover was unable to create a Spring-specific test for this Spring method.
-        //   Run dcover create --keep-partial-tests to gain insights into why
-        //   a non-Spring test was created.
+        // Antes:
+        // ApiResponse<Optional<StColorEntity>> actualDeleteColorResult = (new StColorController()).deleteColor(1L);
+        // Después:
+        ApiResponse<Optional<StColorEntity>> actualDeleteColorResult = stColorController.deleteColor(1L);
 
-        // Arrange and Act
-        ApiResponse<Optional<StColorEntity>> actualDeleteColorResult = (new StColorController()).deleteColor(1L);
-
-        // Assert
         assertEquals("", actualDeleteColorResult.getError());
         assertEquals("Bad Request", actualDeleteColorResult.getMessage());
         assertNull(actualDeleteColorResult.getData());
