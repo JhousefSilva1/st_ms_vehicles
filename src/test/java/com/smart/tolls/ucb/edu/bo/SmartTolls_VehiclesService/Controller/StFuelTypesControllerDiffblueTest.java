@@ -29,12 +29,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ContextConfiguration(classes = {StFuelTypesController.class})
-@DisabledInAotMode
-@ExtendWith(SpringExtension.class)
-@MockBean
 @SpringBootTest
-@WebMvcTest(StBrandController.class)
+@MockBean // (si corresponde)
+@DisabledInAotMode // (si realmente lo necesitas)
 class StFuelTypesControllerDiffblueTest {
     @Autowired
     private StFuelTypesController stFuelTypesController;

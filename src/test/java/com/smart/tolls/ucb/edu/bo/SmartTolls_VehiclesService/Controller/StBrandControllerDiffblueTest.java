@@ -33,12 +33,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ContextConfiguration(classes = {StBrandController.class})
-@DisabledInAotMode
-@ExtendWith(SpringExtension.class)
-@MockBean
 @SpringBootTest
-@WebMvcTest(StBrandController.class)
+@MockBean // (si corresponde)
+@DisabledInAotMode // (si realmente lo necesitas)
 class StBrandControllerDiffblueTest {
     @Autowired
     private StBrandController stBrandController;

@@ -37,12 +37,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ContextConfiguration(classes = {StWalletController.class})
-@DisabledInAotMode
-@ExtendWith(SpringExtension.class)
-@MockBean
 @SpringBootTest
-@WebMvcTest(StBrandController.class)
+@MockBean // (si corresponde)
+@DisabledInAotMode // (si realmente lo necesitas)
 class StWalletControllerDiffblueTest {
     @Autowired
     private StWalletController stWalletController;
