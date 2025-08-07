@@ -38,7 +38,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,35 +55,33 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@SpringBootTest
-@MockBean // (si corresponde)
-@DisabledInAotMode // (si realmente lo necesitas)
+@ExtendWith(MockitoExtension.class)
 class StVehiclesControllerDiffblueTest {
-    @MockBean
+    @Mock
     private CountryCityClient countryCityClient;
 
-    @MockBean
+    @Mock
     private PersonsClient personsClient;
 
-    @MockBean
+    @Mock
     private StColorService stColorService;
 
-    @MockBean
+    @Mock
     private StFuelTypesService stFuelTypesService;
 
-    @MockBean
+    @Mock
     private StModelService stModelService;
 
-    @Autowired
+    @InjectMocks
     private StVehiclesController stVehiclesController;
 
-    @MockBean
+    @Mock
     private StVehiclesService stVehiclesService;
 
-    @MockBean
+    @Mock
     private StVehiclesTypeService stVehiclesTypeService;
 
-    @MockBean
+    @Mock
     private StWalletService stWalletService;
 
     /**
