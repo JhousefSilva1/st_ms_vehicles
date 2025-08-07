@@ -37,7 +37,7 @@ class StFuelTypesControllerDiffblueTest {
     @InjectMocks
     private StFuelTypesController stFuelTypesController;
 
-    @Mock
+    @MockBean
     private StFuelTypesService stFuelTypesService;
 
     /**

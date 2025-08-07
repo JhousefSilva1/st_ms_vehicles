@@ -57,31 +57,31 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
 class StVehiclesControllerDiffblueTest {
-    @Mock
+    @MockBean
     private CountryCityClient countryCityClient;
 
-    @Mock
+    @MockBean
     private PersonsClient personsClient;
 
-    @Mock
+    @MockBean
     private StColorService stColorService;
 
-    @Mock
+    @MockBean
     private StFuelTypesService stFuelTypesService;
 
-    @Mock
+    @MockBean
     private StModelService stModelService;
 
     @InjectMocks
     private StVehiclesController stVehiclesController;
 
-    @Mock
+    @MockBean
     private StVehiclesService stVehiclesService;
 
-    @Mock
+    @MockBean
     private StVehiclesTypeService stVehiclesTypeService;
 
-    @Mock
+    @MockBean
     private StWalletService stWalletService;
 
     /**

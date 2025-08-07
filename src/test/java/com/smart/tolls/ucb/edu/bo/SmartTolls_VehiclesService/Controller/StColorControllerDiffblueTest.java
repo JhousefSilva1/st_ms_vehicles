@@ -38,7 +38,7 @@ class StColorControllerDiffblueTest {
     @InjectMocks
     private StColorController stColorController;
 
-    @Mock
+    @MockBean
     private StColorService stColorService;
 
     /**

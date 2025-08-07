@@ -45,7 +45,7 @@ class StWalletControllerDiffblueTest {
     @InjectMocks
     private StWalletController stWalletController;
 
-    @Mock
+    @MockBean
     private StWalletService stWalletService;
 
     /**

@@ -41,7 +41,7 @@ class StBrandControllerDiffblueTest {
     @InjectMocks
     private StBrandController stBrandController;
 
-    @Mock
+    @MockBean
     private StBrandService stBrandService;
 
     /**

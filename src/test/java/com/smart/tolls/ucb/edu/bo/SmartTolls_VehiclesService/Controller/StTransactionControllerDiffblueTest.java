@@ -50,7 +50,7 @@ class StTransactionControllerDiffblueTest {
     @InjectMocks
     private StTransactionController stTransactionController;
 
-    @Mock
+    @MockBean
     private StTransactionService stTransactionService;
 
     /**
